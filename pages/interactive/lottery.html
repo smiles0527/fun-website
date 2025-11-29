@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Jackpot</title>
+    <style>
+        body { font-family: 'Arial Black', sans-serif; background: gold; text-align: center; padding-top: 50px; }
+        .ticket { background: white; padding: 30px; border: 5px dashed black; display: inline-block; margin: 20px; transform: rotate(-2deg); }
+        .numbers { font-size: 40px; letter-spacing: 10px; margin: 20px 0; }
+        button { font-size: 24px; padding: 15px 40px; background: red; color: white; border: none; cursor: pointer; border-radius: 50px; box-shadow: 0 5px 0 darkred; }
+        button:active { transform: translateY(5px); box-shadow: none; }
+        #result { font-size: 30px; margin-top: 30px; min-height: 50px; }
+    </style>
+</head>
+<body>
+    <h1>🎰 INSTANT LOTTERY 🎰</h1>
+    <div class="ticket">
+        <div>YOUR NUMBERS</div>
+        <div class="numbers" id="your-nums">?? ?? ?? ?? ??</div>
+    </div>
+    <br>
+    <button onclick="play()">SCRATCH & WIN</button>
+    <div id="result"></div>
+    <br><br>
+    <a href="../../index.html">I'm broke</a>
+
+    <script>
+        function play() {
+            const yourNums = [];
+            for(let i=0; i<5; i++) yourNums.push(Math.floor(Math.random() * 90) + 10);
+            
+            // Generate winning numbers that are exactly +1 or -1 of your numbers
+            const winNums = yourNums.map(n => n + (Math.random() > 0.5 ? 1 : -1));
+            
+            document.getElementById('your-nums').textContent = yourNums.join(' ');
+            
+            const res = document.getElementById('result');
+            res.innerHTML = `Running simulation...`;
+            
+            setTimeout(() => {
+                res.innerHTML = `
+                    <div style="font-size: 20px;">WINNING NUMBERS:</div>
+                    <div style="font-size: 40px; color: red;">${winNums.join(' ')}</div>
+                    <div style="margin-top: 20px;">SO CLOSE! TRY AGAIN!</div>
+                `;
+            }, 1000);
+        }
+    </script>
+<script src="/home/yuqiao/codes/mind-reader/assets/js/troll-network.js"></script><script src="../../assets/js/troll-network.js"></script></body>
+</html>
+

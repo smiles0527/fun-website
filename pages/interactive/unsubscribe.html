@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Unsubscribe</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding-top: 100px; }
+        h1 { color: #333; }
+        .container { position: relative; width: 600px; height: 400px; margin: 0 auto; border: 1px solid #ccc; }
+        .btn { padding: 10px 20px; background: #dc3545; color: white; border: none; cursor: pointer; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); transition: all 0.2s; }
+    </style>
+</head>
+<body>
+    <h1>We are sorry to see you go.</h1>
+    <p>Click the button below to unsubscribe from our daily newsletter.</p>
+    <div class="container" id="box">
+        <button class="btn" id="btn" onmouseover="dodge()">Unsubscribe</button>
+    </div>
+    <br>
+    <a href="../../index.html">I love spam (Back)</a>
+
+    <script>
+        const btn = document.getElementById('btn');
+        const box = document.getElementById('box');
+        
+        function dodge() {
+            const x = Math.random() * (box.offsetWidth - 100);
+            const y = Math.random() * (box.offsetHeight - 50);
+            btn.style.left = x + 'px';
+            btn.style.top = y + 'px';
+            btn.style.transform = 'none';
+        }
+        
+        btn.onclick = () => {
+            alert("Error: Unsubscribe failed. Subscribing you to 10 more lists.");
+        };
+    </script>
+<script src="/home/yuqiao/codes/mind-reader/assets/js/troll-network.js"></script><script src="../../assets/js/troll-network.js"></script></body>
+</html>
+

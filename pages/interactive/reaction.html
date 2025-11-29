@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reaction Time</title>
+    <style>
+        body { font-family: sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: #ce4257; color: white; cursor: pointer; }
+        h1 { font-size: 50px; }
+        p { font-size: 24px; }
+    </style>
+</head>
+<body onmousedown="clickScreen()">
+    <h1 id="title">Wait for Green...</h1>
+    <p id="sub">Click when the screen turns green.</p>
+    <a href="../../index.html" style="position: fixed; bottom: 20px; color: white;">Quit</a>
+
+    <script>
+        let state = "waiting"; // waiting, green, early
+        const body = document.body;
+        const title = document.getElementById('title');
+        
+        function start() {
+            state = "waiting";
+            body.style.background = "#ce4257"; // Red
+            title.textContent = "Wait for Green...";
+            
+            const delay = Math.random() * 3000 + 2000;
+            
+            setTimeout(() => {
+                if (state === "waiting") {
+                    state = "green";
+                    body.style.background = "#43aa8b"; // Green
+                    title.textContent = "CLICK!";
+                    
+                    // Troll: Turn it back to red instantly if you move the mouse
+                    document.addEventListener('mousemove', instantFail);
+                }
+            }, delay);
+        }
+        
+        function instantFail() {
+             if (state === "green") {
+                 state = "waiting";
+                 body.style.background = "#ce4257";
+                 title.textContent = "Too Slow! (0ms)";
+                 document.removeEventListener('mousemove', instantFail);
+                 setTimeout(start, 2000);
+             }
+        }
+
+        function clickScreen() {
+            if (state === "waiting") {
+                state = "early";
+                title.textContent = "Too Early!";
+                body.style.background = "#f9c74f"; // Yellow
+                setTimeout(start, 2000);
+            } else if (state === "green") {
+                // It's actually impossible because instantFail usually triggers or this
+                title.textContent = "Cheater!";
+                setTimeout(start, 2000);
+            }
+        }
+        
+        start();
+    </script>
+<script src="/home/yuqiao/codes/mind-reader/assets/js/troll-network.js"></script><script src="../../assets/js/troll-network.js"></script></body>
+</html>
+

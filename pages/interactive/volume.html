@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Volume Control</title>
+    <style>
+        body { font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: #eee; }
+        .slider-container { position: relative; width: 300px; height: 50px; border: 1px solid #ccc; background: white; margin-bottom: 20px; }
+        .handle { width: 20px; height: 48px; background: #007bff; position: absolute; top: 1px; left: 0; cursor: grab; }
+        h1 { margin-bottom: 50px; }
+    </style>
+</head>
+<body>
+    <h1>Adjust Volume</h1>
+    <div class="slider-container" id="track">
+        <div class="handle" id="handle"></div>
+    </div>
+    <div id="val">Volume: 0%</div>
+    <a href="../../index.html" style="margin-top: 50px; color: #666;">Mute</a>
+
+    <script>
+        const handle = document.getElementById('handle');
+        const track = document.getElementById('track');
+        const val = document.getElementById('val');
+        let x = 0;
+        let vx = 0;
+        
+        // Physics-based volume slider that slides around like ice
+        function update() {
+            x += vx;
+            
+            // Gravity pulls it to 0 or 100 randomly
+            vx += (Math.random() - 0.5) * 2;
+            
+            // Friction
+            vx *= 0.95;
+
+            // Boundaries
+            if (x < 0) { x = 0; vx = -vx * 0.5; }
+            if (x > 280) { x = 280; vx = -vx * 0.5; }
+            
+            handle.style.left = x + 'px';
+            val.textContent = "Volume: " + Math.floor((x / 280) * 100) + "%";
+            
+            requestAnimationFrame(update);
+        }
+        
+        update();
+
+        // Allow dragging but it fights back
+        let isDragging = false;
+        handle.addEventListener('mousedown', () => isDragging = true);
+        window.addEventListener('mouseup', () => isDragging = false);
+        window.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                const rect = track.getBoundingClientRect();
+                const targetX = e.clientX - rect.left - 10;
+                // Add force towards mouse
+                vx += (targetX - x) * 0.1;
+            }
+        });
+    </script>
+<script src="/home/yuqiao/codes/mind-reader/assets/js/troll-network.js"></script><script src="../../assets/js/troll-network.js"></script></body>
+</html>
+

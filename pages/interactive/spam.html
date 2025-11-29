@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>You Won!</title>
+    <style>
+        body { font-family: sans-serif; overflow: hidden; }
+        .popup { position: absolute; background: white; border: 2px solid blue; padding: 2px; width: 300px; box-shadow: 5px 5px 10px rgba(0,0,0,0.5); }
+        .header { background: blue; color: white; padding: 5px; cursor: move; font-weight: bold; }
+        .content { padding: 20px; text-align: center; }
+        button { margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Wait for it...</h1>
+    <a href="../../index.html">Stop the madness</a>
+
+    <script>
+        setTimeout(spawn, 1000);
+
+        function spawn() {
+            const div = document.createElement('div');
+            div.className = 'popup';
+            div.style.left = Math.random() * (window.innerWidth - 300) + 'px';
+            div.style.top = Math.random() * (window.innerHeight - 200) + 'px';
+            div.innerHTML = `
+                <div class="header">CONGRATULATIONS</div>
+                <div class="content">
+                    You have won a free iPhone 5!<br>
+                    <button onclick="spawn(); spawn();">CLAIM NOW</button>
+                    <button onclick="spawn()">Close</button>
+                </div>
+            `;
+            document.body.appendChild(div);
+        }
+    </script>
+<script src="/home/yuqiao/codes/mind-reader/assets/js/troll-network.js"></script><script src="../../assets/js/troll-network.js"></script></body>
+</html>
+

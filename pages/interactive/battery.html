@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Battery Charger</title>
+    <style>
+        body { font-family: sans-serif; background: #222; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .battery { width: 150px; height: 300px; border: 10px solid white; border-radius: 20px; position: relative; padding: 10px; }
+        .battery::before { content: ''; position: absolute; top: -20px; left: 50%; transform: translateX(-50%); width: 60px; height: 20px; background: white; }
+        .level { width: 100%; height: 20%; background: red; position: absolute; bottom: 10px; left: 10px; width: calc(100% - 20px); transition: height 0.1s; }
+        h2 { margin-top: 30px; }
+    </style>
+</head>
+<body>
+    <div class="battery">
+        <div class="level" id="lvl"></div>
+    </div>
+    <h2>Shake device to charge!</h2>
+    <p>(Or move your mouse vigorously)</p>
+    <a href="../../index.html" style="color: #666; margin-top: 20px;">I'm tired</a>
+
+    <script>
+        let charge = 20;
+        const lvl = document.getElementById('lvl');
+        
+        // Decay
+        setInterval(() => {
+            if (charge > 0) charge -= 0.5;
+            update();
+        }, 1000);
+
+        // Shake detection (mouse)
+        let lastX = 0;
+        let lastY = 0;
+        
+        window.addEventListener('mousemove', (e) => {
+            const dist = Math.abs(e.clientX - lastX) + Math.abs(e.clientY - lastY);
+            if (dist > 50) {
+                charge += 0.2;
+                if (charge > 100) charge = 100;
+                update();
+            }
+            lastX = e.clientX;
+            lastY = e.clientY;
+        });
+        
+        function update() {
+            lvl.style.height = charge + '%';
+            if (charge > 60) lvl.style.background = '#0f0';
+            else if (charge > 30) lvl.style.background = 'yellow';
+            else lvl.style.background = 'red';
+        }
+    </script>
+<script src="/home/yuqiao/codes/mind-reader/assets/js/troll-network.js"></script><script src="../../assets/js/troll-network.js"></script></body>
+</html>
+

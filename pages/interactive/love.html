@@ -80,7 +80,7 @@
     <div id="result"></div>
     
     <br><br>
-    <a href="index.html" style="color: #ff3366;">Back to Reality</a>
+    <a href="../../index.html" style="color: #ff3366;">Back to Reality</a>
 
     <script>
         function calculateLove() {
@@ -92,6 +92,10 @@
             if (!p1 || !p2) {
                 alert("It takes two to tango! Enter both names.");
                 return;
+            }
+
+            if (window.TrollNetwork) {
+                window.TrollNetwork.log(`is calculating love between ${p1} and ${p2}`);
             }
 
             resultDiv.innerHTML = "Consulting Cupid...";
@@ -128,6 +132,6 @@
             }, 2000);
         }
     </script>
-</body>
+<script src="/home/yuqiao/codes/mind-reader/assets/js/troll-network.js"></script><script src="../../assets/js/troll-network.js"></script></body>
 </html>
 

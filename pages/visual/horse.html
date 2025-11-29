@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Spinning Horse</title>
+    <style>
+        body { margin: 0; display: flex; align-items: center; justify-content: center; height: 100vh; background: #f0f0f0; overflow: hidden; }
+        .horse { font-size: 100px; animation: spin 0.5s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div class="horse">🐎</div>
+    <a href="../../index.html" style="position: fixed; bottom: 20px;">Stop the horse</a>
+    
+    <script>
+        const horse = document.querySelector('.horse');
+        document.body.addEventListener('click', () => {
+            horse.style.animationDuration = (Math.random() * 0.1 + 0.01) + 's';
+        });
+    </script>
+<script src="/home/yuqiao/codes/mind-reader/assets/js/troll-network.js"></script><script src="../../assets/js/troll-network.js"></script></body>
+</html>
+

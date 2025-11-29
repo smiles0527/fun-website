@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Find My House</title>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        #map { width: 100vw; height: 100vh; background: #aadaff; position: relative; cursor: move; }
+        .land { position: absolute; background: #c2b280; border: 1px solid #a09060; }
+        .controls { position: fixed; top: 10px; left: 10px; background: white; padding: 10px; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.2); }
+    </style>
+</head>
+<body>
+    <div id="map">
+        <!-- Procedural endless ocean with tiny islands -->
+    </div>
+    <div class="controls">
+        <input type="text" placeholder="Enter Address...">
+        <button onclick="search()">Search</button>
+        <br><br>
+        <a href="../../index.html">Back</a>
+    </div>
+
+    <script>
+        const map = document.getElementById('map');
+        
+        function search() {
+            alert("Locating...");
+            setTimeout(() => {
+                alert("GPS Signal Lost. You are now in the ocean.");
+            }, 1000);
+        }
+        
+        // Generate tiny random islands
+        for(let i=0; i<50; i++) {
+            const island = document.createElement('div');
+            island.className = 'land';
+            island.style.width = (Math.random() * 50 + 10) + 'px';
+            island.style.height = (Math.random() * 50 + 10) + 'px';
+            island.style.left = (Math.random() * 100) + 'vw';
+            island.style.top = (Math.random() * 100) + 'vh';
+            island.style.borderRadius = '50%';
+            map.appendChild(island);
+        }
+    </script>
+<script src="/home/yuqiao/codes/mind-reader/assets/js/troll-network.js"></script><script src="../../assets/js/troll-network.js"></script></body>
+</html>
+

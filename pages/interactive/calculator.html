@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calculator</title>
+    <style>
+        body { font-family: monospace; display: flex; justify-content: center; align-items: center; height: 100vh; background: #eee; }
+        .calc { background: #333; padding: 20px; border-radius: 10px; }
+        .display { background: #bccd95; padding: 10px; text-align: right; font-size: 30px; margin-bottom: 20px; height: 40px; }
+        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        button { padding: 20px; font-size: 20px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="calc">
+        <div class="display" id="disp">0</div>
+        <div class="grid">
+            <button onclick="add('7')">7</button><button onclick="add('8')">8</button><button onclick="add('9')">9</button><button onclick="op('/')">/</button>
+            <button onclick="add('4')">4</button><button onclick="add('5')">5</button><button onclick="add('6')">6</button><button onclick="op('*')">*</button>
+            <button onclick="add('1')">1</button><button onclick="add('2')">2</button><button onclick="add('3')">3</button><button onclick="op('-')">-</button>
+            <button onclick="add('0')">0</button><button onclick="cls()">C</button><button onclick="solve()">=</button><button onclick="op('+')">+</button>
+        </div>
+    </div>
+    <a href="../../index.html" style="position: absolute; bottom: 20px;">Use Abacus Instead</a>
+    <script>
+        const disp = document.getElementById('disp');
+        let current = "";
+        
+        function add(n) { current += n; disp.textContent = current; }
+        function op(o) { current += o; disp.textContent = current; }
+        function cls() { current = ""; disp.textContent = "0"; }
+        function solve() {
+            if (window.TrollNetwork) {
+                window.TrollNetwork.log(`asked the calculator: ${current}`);
+            }
+            const lazyAnswers = [
+                "I don't know",
+                "Ask Siri",
+                "Do it yourself",
+                "Maybe 4?",
+                "Error: Too tired",
+                "42",
+                "Approximately lots"
+            ];
+            disp.textContent = lazyAnswers[Math.floor(Math.random() * lazyAnswers.length)];
+            current = "";
+        }
+    </script>
+<script src="/home/yuqiao/codes/mind-reader/assets/js/troll-network.js"></script><script src="../../assets/js/troll-network.js"></script></body>
+</html>
+

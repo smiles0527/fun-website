@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ugly Meter</title>
+    <style>
+        body {
+            background: #000;
+            color: #0f0;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #camera-feed {
+            width: 640px;
+            height: 480px;
+            background: #111;
+            border: 2px solid #0f0;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .scan-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: #0f0;
+            opacity: 0.5;
+            box-shadow: 0 0 10px #0f0;
+            animation: scan 2s linear infinite;
+            display: none;
+        }
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+        button {
+            background: #0f0;
+            color: black;
+            border: none;
+            padding: 15px 30px;
+            font-size: 20px;
+            margin-top: 20px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: bold;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 24px;
+            text-align: center;
+            min-height: 100px;
+        }
+        .face-box {
+            position: absolute;
+            border: 2px solid red;
+            width: 100px;
+            height: 100px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>AI Beauty Analyzer 3000</h1>
+    <div id="camera-feed">
+        <div id="placeholder-text">Camera Feed Offline</div>
+        <div class="scan-line" id="scan-line"></div>
+        <div class="face-box" id="face-box"></div>
+    </div>
+    
+    <button onclick="startScan()">Analyze My Face</button>
+    <div id="result"></div>
+    
+    <a href="../../index.html" style="color: #0f0; margin-top: 20px;">Exit</a>
+
+    <script>
+        function startScan() {
+            const feed = document.getElementById('camera-feed');
+            const text = document.getElementById('placeholder-text');
+            const scanner = document.getElementById('scan-line');
+            const result = document.getElementById('result');
+            const faceBox = document.getElementById('face-box');
+            
+            result.textContent = "Requesting camera access...";
+            
+            setTimeout(() => {
+                if (confirm("Allow 'TotallySafeWebsite' to access your webcam?")) {
+                    text.textContent = "Initializing sensor...";
+                    
+                    setTimeout(() => {
+                        text.textContent = "[VIDEO FEED DETECTED]";
+                        scanner.style.display = 'block';
+                        result.textContent = "Scanning facial geometry...";
+                        
+                        // Move face box around randomly
+                        faceBox.style.display = 'block';
+                        let moves = 0;
+                        const moveInterval = setInterval(() => {
+                            const x = Math.random() * (640 - 100);
+                            const y = Math.random() * (480 - 100);
+                            faceBox.style.left = x + 'px';
+                            faceBox.style.top = y + 'px';
+                            moves++;
+                            if (moves > 10) clearInterval(moveInterval);
+                        }, 200);
+
+                        setTimeout(() => {
+                            scanner.style.display = 'none';
+                            faceBox.style.display = 'none';
+                            
+                            const insults = [
+                                "Error: Lens cracked from exposure.",
+                                "Result: 2/10. Try wearing a bag.",
+                                "AI System crashed. Too much ugly.",
+                                "Result: You have a great personality!",
+                                "Is this a Halloween mask?",
+                                "Warning: Biohazard detected.",
+                                "Result: 404 Beauty Not Found.",
+                                "I've seen better faces on a pizza.",
+                                "Are you a model? For gloves?"
+                            ];
+                            
+                            result.innerHTML = `<span style="color: red; font-size: 30px;">${insults[Math.floor(Math.random() * insults.length)]}</span>`;
+                        }, 3000);
+                    }, 1000);
+                } else {
+                    result.textContent = "Permission Denied. Probably for the best.";
+                }
+            }, 500);
+        }
+    </script>
+<script src="/home/yuqiao/codes/mind-reader/assets/js/troll-network.js"></script><script src="../../assets/js/troll-network.js"></script></body>
+</html>
+

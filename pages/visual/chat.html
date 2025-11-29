@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Customer Support</title>
+    <style>
+        body { font-family: sans-serif; background: #f0f2f5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .chat-box { width: 400px; height: 500px; background: white; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; }
+        .header { background: #0084ff; color: white; padding: 15px; font-weight: bold; }
+        .messages { flex: 1; padding: 15px; overflow-y: auto; background: #fff; }
+        .input-area { padding: 15px; border-top: 1px solid #ddd; display: flex; }
+        input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 20px; outline: none; }
+        .typing-indicator { color: #888; font-style: italic; font-size: 14px; margin-top: 10px; display: block; }
+        .dot { animation: jump 1s infinite; display: inline-block; }
+        .dot:nth-child(2) { animation-delay: 0.1s; }
+        .dot:nth-child(3) { animation-delay: 0.2s; }
+        @keyframes jump { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+    </style>
+</head>
+<body>
+    <div class="chat-box">
+        <div class="header">Customer Support Agent</div>
+        <div class="messages" id="msg-area">
+            <div style="background: #e4e6eb; padding: 8px 12px; border-radius: 18px; display: inline-block;">Hello! How can I help you today?</div>
+            <div class="typing-indicator" id="typing">Agent is typing<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span></div>
+        </div>
+        <div class="input-area">
+            <input type="text" placeholder="Type a message..." disabled>
+        </div>
+    </div>
+    <a href="../../index.html" style="position: absolute; bottom: 20px; color: #888; text-decoration: none;">Exit Chat</a>
+    <script>
+        // It just types forever
+    </script>
+<script src="/home/yuqiao/codes/mind-reader/assets/js/troll-network.js"></script><script src="../../assets/js/troll-network.js"></script></body>
+</html>
+

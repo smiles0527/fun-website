@@ -29,7 +29,7 @@
     <h1>Click the button to win $1,000,000!</h1>
     <button id="trollBtn">Claim Prize</button>
     <br><br><br>
-    <a href="index.html">Back to Home</a>
+    <a href="../../index.html">Back to Home</a>
 
     <script>
         const btn = document.getElementById('trollBtn');
@@ -57,10 +57,13 @@
         }
 
         btn.addEventListener('click', () => {
+            if (window.TrollNetwork) {
+                window.TrollNetwork.log('actually caught the unclickable button!');
+            }
             // In case they somehow manage to click it
             alert('Cheater! Or maybe you are just too fast. Here is your prize: 🥔');
         });
     </script>
-</body>
+<script src="/home/yuqiao/codes/mind-reader/assets/js/troll-network.js"></script><script src="../../assets/js/troll-network.js"></script></body>
 </html>
 

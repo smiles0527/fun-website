@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Phone Number</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding-top: 50px; }
+        .slider-group { margin: 20px; }
+        input[type=range] { width: 300px; }
+    </style>
+</head>
+<body>
+    <h1>Enter Phone Number</h1>
+    <p>Please adjust the sliders to enter your 10-digit phone number.</p>
+    
+    <div id="sliders"></div>
+    <div id="result" style="font-size: 30px; font-weight: bold; margin-top: 30px;">(000) 000-0000</div>
+    
+    <br>
+    <a href="../../index.html">I don't have a phone</a>
+
+    <script>
+        const container = document.getElementById('sliders');
+        const res = document.getElementById('result');
+        const values = new Array(10).fill(0);
+
+        for(let i=0; i<10; i++) {
+            const div = document.createElement('div');
+            div.className = 'slider-group';
+            div.innerHTML = `
+                Digit ${i+1}: <input type="range" min="0" max="9" value="0" oninput="update(${i}, this.value)">
+            `;
+            container.appendChild(div);
+        }
+
+        function update(index, val) {
+            values[index] = val;
+            
+            // Randomly change another value because "interference"
+            if (Math.random() > 0.7) {
+                const other = Math.floor(Math.random() * 10);
+                values[other] = Math.floor(Math.random() * 10);
+                // Update UI for that slider
+                document.querySelectorAll('input')[other].value = values[other];
+            }
+
+            res.textContent = `(${values[0]}${values[1]}${values[2]}) ${values[3]}${values[4]}${values[5]}-${values[6]}${values[7]}${values[8]}${values[9]}`;
+        }
+    </script>
+<script src="/home/yuqiao/codes/mind-reader/assets/js/troll-network.js"></script><script src="../../assets/js/troll-network.js"></script></body>
+</html>
+

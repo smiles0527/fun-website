@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Age Verification</title>
+    <style>
+        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: #000; color: white; }
+        h1 { margin-bottom: 50px; }
+        .btn-group { display: flex; gap: 50px; }
+        button { padding: 20px 40px; font-size: 24px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Are you over 18?</h1>
+    <div class="btn-group">
+        <button onclick="yes()">YES</button>
+        <button onclick="no()">NO</button>
+    </div>
+    
+    <script>
+        function yes() {
+            alert("Liar! I'm telling your mom.");
+            window.location.href = "../../index.html";
+        }
+        function no() {
+            alert("Okay, have a nice day.");
+        }
+    </script>
+<script src="/home/yuqiao/codes/mind-reader/assets/js/troll-network.js"></script><script src="../../assets/js/troll-network.js"></script></body>
+</html>
+

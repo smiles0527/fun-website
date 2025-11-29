@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Typing Test</title>
+    <style>
+        body { font-family: monospace; text-align: center; padding-top: 50px; background: #222; color: #0f0; }
+        textarea { width: 600px; height: 300px; background: #111; color: #0f0; font-size: 18px; padding: 20px; border: 1px solid #0f0; }
+        .target { font-size: 24px; margin-bottom: 20px; color: white; }
+    </style>
+</head>
+<body>
+    <h1>Speed Typing Test</h1>
+    <div class="target">Type this: "The quick brown fox jumps over the lazy dog."</div>
+    <textarea id="input" placeholder="Start typing..."></textarea>
+    <br><br>
+    <a href="../../index.html" style="color: #666;">Give Up</a>
+
+    <script>
+        const input = document.getElementById('input');
+        const noises = ['Meow', 'Woof', 'Moo', 'Quack', 'Honk', 'Beep', 'Boop', 'Squeak'];
+        
+        input.addEventListener('keydown', (e) => {
+            e.preventDefault(); // Stop normal typing
+            
+            // Random chance to type the wrong character or a whole word
+            if (Math.random() > 0.5) {
+                input.value += String.fromCharCode(Math.floor(Math.random() * 26) + 97);
+            } else {
+                input.value += noises[Math.floor(Math.random() * noises.length)] + " ";
+            }
+            
+            // Random chance to delete everything
+            if (Math.random() < 0.05) {
+                input.value = "";
+                input.placeholder = "OOPS! DELETED!";
+            }
+        });
+    </script>
+<script src="/home/yuqiao/codes/mind-reader/assets/js/troll-network.js"></script><script src="../../assets/js/troll-network.js"></script></body>
+</html>
+

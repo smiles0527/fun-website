@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Color Test</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding-top: 50px; }
+        .box { width: 200px; height: 200px; background: red; margin: 0 auto; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 24px; }
+        .options { margin-top: 30px; }
+        button { padding: 10px 30px; font-size: 18px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Color Blindness Test</h1>
+    <p>What color is the circle below?</p>
+    
+    <div class="box" id="circle">BLUE</div>
+    
+    <div class="options">
+        <button onclick="check('Red')">Red</button>
+        <button onclick="check('Blue')">Blue</button>
+        <button onclick="check('Green')">Green</button>
+        <button onclick="check('Yellow')">Yellow</button>
+    </div>
+    
+    <h2 id="result" style="color: red; opacity: 0;">WRONG</h2>
+    <br><br>
+    <a href="../../index.html">I give up</a>
+
+    <script>
+        const circle = document.getElementById('circle');
+        const res = document.getElementById('result');
+        const colors = ['Red', 'Blue', 'Green', 'Yellow', 'Purple', 'Orange'];
+        
+        function update() {
+            // Gaslighting: Text says one thing, Color is another, Buttons are mixed
+            const colorName = colors[Math.floor(Math.random() * colors.length)];
+            const bg = colors[Math.floor(Math.random() * colors.length)];
+            
+            circle.style.backgroundColor = bg;
+            circle.innerText = colorName;
+        }
+        
+        function check(val) {
+            res.textContent = "WRONG! Are you sure?";
+            res.style.opacity = 1;
+            setTimeout(() => res.style.opacity = 0, 1000);
+            update();
+        }
+        
+        update();
+    </script>
+<script src="/home/yuqiao/codes/mind-reader/assets/js/troll-network.js"></script><script src="../../assets/js/troll-network.js"></script></body>
+</html>
+

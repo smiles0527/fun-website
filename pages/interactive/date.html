@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Date Picker</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding-top: 100px; }
+        .calendar { display: inline-block; border: 1px solid #ccc; padding: 20px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .controls { display: flex; justify-content: space-between; margin-bottom: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+        .day { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: #eee; cursor: pointer; }
+        .day:hover { background: #ddd; }
+    </style>
+</head>
+<body>
+    <h1>Select Your Birth Date</h1>
+    <div class="calendar">
+        <div class="controls">
+            <button onclick="prev()">Previous Month</button>
+            <span id="label">January, Year 1</span>
+            <button onclick="next()">Next Month</button>
+        </div>
+        <div class="grid" id="grid"></div>
+    </div>
+    <br><br>
+    <a href="../../index.html">I was born today</a>
+
+    <script>
+        // Start at year 1
+        let year = 1;
+        let month = 0;
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+        function render() {
+            document.getElementById('label').textContent = `${months[month]}, Year ${year}`;
+            const grid = document.getElementById('grid');
+            grid.innerHTML = '';
+            for(let i=1; i<=30; i++) {
+                const d = document.createElement('div');
+                d.className = 'day';
+                d.textContent = i;
+                d.onclick = () => alert("You are " + (2025 - year) + " years old? Wow.");
+                grid.appendChild(d);
+            }
+        }
+
+        function next() {
+            month++;
+            if(month > 11) { month = 0; year++; }
+            render();
+        }
+
+        function prev() {
+            month--;
+            if(month < 0) { month = 11; year--; }
+            render();
+        }
+        
+        render();
+    </script>
+<script src="/home/yuqiao/codes/mind-reader/assets/js/troll-network.js"></script><script src="../../assets/js/troll-network.js"></script></body>
+</html>
+

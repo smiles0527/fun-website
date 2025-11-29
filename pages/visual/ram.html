@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Download RAM</title>
+    <style>
+        body { background: #1a1a1a; color: #0f0; font-family: monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .box { border: 2px solid #0f0; padding: 40px; text-align: center; width: 500px; }
+        .bar-container { width: 100%; background: #333; height: 30px; margin-top: 20px; }
+        .bar { width: 0%; height: 100%; background: #0f0; transition: width 0.2s; }
+        button { background: #0f0; color: black; border: none; padding: 15px 30px; font-size: 20px; cursor: pointer; font-family: monospace; font-weight: bold; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>FREE RAM DOWNLOADER</h1>
+        <p>Select amount: 
+            <select style="background: black; color: #0f0; border: 1px solid #0f0; padding: 5px;">
+                <option>8 GB</option>
+                <option>16 GB</option>
+                <option>32 GB</option>
+                <option>1 TB (Best Value)</option>
+            </select>
+        </p>
+        <button onclick="start()">DOWNLOAD NOW</button>
+        <div class="bar-container">
+            <div class="bar" id="bar"></div>
+        </div>
+        <div id="status">Waiting...</div>
+    </div>
+    <a href="../../index.html" style="color: #444; margin-top: 20px;">Cancel</a>
+    <script>
+        function start() {
+            const bar = document.getElementById('bar');
+            const status = document.getElementById('status');
+            let width = 0;
+            document.querySelector('button').disabled = true;
+            
+            const interval = setInterval(() => {
+                if (width >= 99) {
+                    width = 99;
+                    status.textContent = "Finalizing... (99%)";
+                    // Just stuck forever
+                } else {
+                    width += Math.random() * 2;
+                    if (width > 99) width = 99;
+                    bar.style.width = width + '%';
+                    status.textContent = `Downloading... ${Math.floor(width)}%`;
+                }
+            }, 100);
+        }
+    </script>
+<script src="/home/yuqiao/codes/mind-reader/assets/js/troll-network.js"></script><script src="../../assets/js/troll-network.js"></script></body>
+</html>
+

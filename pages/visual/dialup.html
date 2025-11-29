@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>High Speed Internet</title>
+    <style>
+        body {
+            background: #c0c0c0;
+            font-family: 'Times New Roman', serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .browser-window {
+            background: white;
+            border: 2px solid #000;
+            width: 800px;
+            margin: 0 auto;
+            box-shadow: 10px 10px 0px rgba(0,0,0,0.5);
+        }
+        .title-bar {
+            background: navy;
+            color: white;
+            padding: 5px;
+            font-weight: bold;
+            font-family: sans-serif;
+            display: flex;
+            justify-content: space-between;
+        }
+        .address-bar {
+            background: #ddd;
+            padding: 5px;
+            border-bottom: 1px solid #999;
+        }
+        .content {
+            padding: 20px;
+            min-height: 400px;
+        }
+        #image-container {
+            width: 400px;
+            height: 300px;
+            border: 1px solid black;
+            position: relative;
+            background: #eee;
+            overflow: hidden;
+            margin: 20px auto;
+        }
+        .loading-line {
+            height: 1px;
+            background: #000; /* Placeholder for image data */
+            width: 100%;
+            margin-bottom: 0;
+            display: none;
+        }
+        .status-bar {
+            border-top: 1px solid #999;
+            padding: 5px;
+            font-size: 12px;
+            background: #eee;
+        }
+        a {
+            color: blue;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="browser-window">
+        <div class="title-bar">
+            <span>NetScape Navigator 1.0</span>
+            <span>X</span>
+        </div>
+        <div class="address-bar">
+            Location: http://www.super-fast-memes.com/daily-funny.jpg
+        </div>
+        <div class="content">
+            <h1 align="center">Welcome to the World Wide Web!</h1>
+            <p align="center">Loading your daily dose of humor...</p>
+            
+            <div id="image-container">
+                <!-- Lines will be injected here -->
+            </div>
+        </div>
+        <div class="status-bar" id="status">
+            Connecting... 14.4kbps
+        </div>
+    </div>
+    <br>
+    <center><a href="../../index.html">Disconnect (Back to Home)</a></center>
+
+    <script>
+        const container = document.getElementById('image-container');
+        const status = document.getElementById('status');
+        const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#00FFFF', '#FF00FF', '#FFFFFF', '#000000'];
+        
+        let totalLines = 300;
+        let currentLine = 0;
+
+        function loadLine() {
+            if (currentLine >= totalLines) {
+                status.textContent = "Done.";
+                // Surprise at the end
+                container.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:50px;">🥔</div>';
+                return;
+            }
+
+            const div = document.createElement('div');
+            div.className = 'loading-line';
+            div.style.display = 'block';
+            
+            // Create a "pattern"
+            if (currentLine % 10 === 0) {
+                div.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            } else {
+                div.style.backgroundColor = container.children.length > 0 ? container.lastChild.style.backgroundColor : 'white';
+            }
+            
+            container.appendChild(div);
+            currentLine++;
+            
+            status.textContent = `Transferring data... ${currentLine}/${totalLines} lines (${Math.floor(Math.random() * 5)} bytes/sec)`;
+
+            // Random delay between lines to simulate inconsistent connection
+            setTimeout(loadLine, Math.random() * 200 + 50);
+        }
+
+        setTimeout(loadLine, 1000);
+    </script>
+<script src="/home/yuqiao/codes/mind-reader/assets/js/troll-network.js"></script><script src="../../assets/js/troll-network.js"></script></body>
+</html>
+

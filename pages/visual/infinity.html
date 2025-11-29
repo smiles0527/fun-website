@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>The Infinite Abyss</title>
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+            background: #87CEEB; /* Start with sky blue */
+            color: #333;
+            margin: 0;
+            transition: background-color 2s ease;
+        }
+        .content-block {
+            padding: 50px 20px;
+            margin: 20px auto;
+            max-width: 600px;
+            background: rgba(255,255,255,0.8);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            font-size: 18px;
+            animation: popIn 0.5s ease;
+        }
+        @keyframes popIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .ad-banner {
+            background: #ffeb3b;
+            border: 2px solid #fbc02d;
+            color: #f57f17;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .error-block {
+            background: #ffebee;
+            border: 2px solid #ef5350;
+            color: #c62828;
+            font-family: 'Arial', sans-serif;
+        }
+        .chat-bubble {
+            background: #e1f5fe;
+            border-radius: 20px;
+            text-align: left;
+            position: relative;
+        }
+        .depth-meter {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.8);
+            color: #0f0;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-family: monospace;
+            z-index: 1000;
+            font-size: 24px;
+        }
+        .back-nav {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        #end-marker {
+            padding: 50px;
+            font-size: 40px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 0 10px black;
+        }
+        button.fake-btn {
+            background: #2196f3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 10px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <a href="../../index.html" class="back-nav">← Rescue Me</a>
+    <div class="depth-meter" id="depth">Depth: 0m</div>
+
+    <div id="container">
+        <div class="content-block">
+            <h1>The Abyss</h1>
+            <p>The answer you seek is at the bottom.</p>
+            <p>↓ Start scrolling ↓</p>
+        </div>
+    </div>
+    
+    <div id="end-marker">THE END</div>
+
+    <script>
+        const container = document.getElementById('container');
+        const endMarker = document.getElementById('end-marker');
+        const depthMeter = document.getElementById('depth');
+        const body = document.body;
+        
+        let depth = 0;
+        let lastScrollTop = 0;
+        
+        // Troll messages
+        const taunts = [
+            "Still scrolling?",
+            "My grandma scrolls faster than this.",
+            "Are we there yet? No.",
+            "I bet you think there's a prize.",
+            "Fun fact: You are wasting electricity.",
+            "Keep going, I'm sure it's close.",
+            "Just 500 more miles...",
+            "Your finger must be tired.",
+            "Why are you doing this?",
+            "Spoiler: The end is a lie.",
+            "Loading more disappointment...",
+            "404: End of page not found.",
+            "Have you hydrated recently?",
+            "Look behind you.",
+            "I am watching you scroll.",
+            "This is your life now."
+        ];
+
+        const colors = [
+            "#87CEEB", // Sky Blue
+            "#4FC3F7",
+            "#29B6F6",
+            "#039BE5",
+            "#0277BD",
+            "#01579B", // Dark Blue
+            "#1A237E", // Indigo
+            "#311B92", // Deep Purple
+            "#000000"  // Black
+        ];
+
+        function createContent() {
+            const type = Math.random();
+            const div = document.createElement('div');
+            div.className = 'content-block';
+
+            if (type < 0.1) {
+                // Fake Ad
+                div.classList.add('ad-banner');
+                div.innerHTML = `
+                    <h3>🎉 CONGRATULATIONS! 🎉</h3>
+                    <p>You have reached the bottom!</p>
+                    <button class="fake-btn" onclick="alert('Just kidding. Keep scrolling.')">CLAIM PRIZE</button>
+                `;
+            } else if (type < 0.2) {
+                // Fake Error
+                div.classList.add('error-block');
+                div.innerHTML = `
+                    <h3>⚠️ SYSTEM ERROR</h3>
+                    <p>Unable to load footer.dll</p>
+                    <p>Retrying in <span id="cd-${Date.now()}">9999</span> years...</p>
+                `;
+            } else if (type < 0.3) {
+                // Fake Chat
+                div.classList.add('chat-bubble');
+                div.innerHTML = `
+                    <strong>Unknown User:</strong><br>
+                    Is there actually an end to this?
+                    <br><br>
+                    <strong>Admin:</strong><br>
+                    Yes, just keep scrolling.
+                `;
+            } else if (type < 0.4) {
+                // Loader
+                div.innerHTML = `
+                    <p>Generating terrain...</p>
+                    <div class="loader"></div>
+                `;
+            } else {
+                // Standard Taunt
+                div.textContent = taunts[Math.floor(Math.random() * taunts.length)];
+                div.style.fontSize = (Math.random() * 20 + 14) + 'px';
+            }
+
+            return div;
+        }
+
+        function addBatch() {
+            // Add 3 items at a time
+            for(let i=0; i<3; i++) {
+                container.appendChild(createContent());
+            }
+            container.appendChild(endMarker); // Keep pushing the marker down
+        }
+
+        // Infinite Scroll Logic
+        window.addEventListener('scroll', () => {
+            const st = window.pageYOffset || document.documentElement.scrollTop;
+            
+            // Update Depth
+            depth = Math.floor(st / 10);
+            depthMeter.textContent = `Depth: ${depth}m`;
+
+            // Darken background based on depth (cap at max index)
+            const colorIndex = Math.min(Math.floor(depth / 500), colors.length - 1);
+            body.style.backgroundColor = colors[colorIndex];
+
+            // Infinite generation
+            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 400) {
+                addBatch();
+            }
+
+            // Randomly jump back UP (The "Slippery Slope" Troll)
+            // 1% chance every scroll event to slip back up 500px
+            if (Math.random() < 0.005 && depth > 500) {
+                window.scrollBy({
+                    top: -500,
+                    behavior: 'smooth'
+                });
+                
+                // Show a message
+                const slip = document.createElement('div');
+                slip.style.position = 'fixed';
+                slip.style.top = '50%';
+                slip.style.left = '50%';
+                slip.style.transform = 'translate(-50%, -50%)';
+                slip.style.background = 'red';
+                slip.style.color = 'white';
+                slip.style.padding = '20px';
+                slip.style.fontSize = '30px';
+                slip.style.fontWeight = 'bold';
+                slip.style.zIndex = '2000';
+                slip.textContent = "Oops! Slippery!";
+                document.body.appendChild(slip);
+                
+                setTimeout(() => slip.remove(), 1000);
+            }
+
+            lastScrollTop = st <= 0 ? 0 : st;
+        });
+
+        // Populate initial
+        addBatch();
+        addBatch();
+    </script>
+<script src="/home/yuqiao/codes/mind-reader/assets/js/troll-network.js"></script><script src="../../assets/js/troll-network.js"></script></body>
+</html>

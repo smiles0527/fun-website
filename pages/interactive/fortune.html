@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fortune Cookie</title>
+    <style>
+        body { font-family: 'Times New Roman', serif; background: #d35400; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; color: #f39c12; }
+        .cookie { font-size: 100px; cursor: pointer; transition: transform 0.1s; }
+        .cookie:active { transform: scale(0.9); }
+        .message { background: white; color: black; padding: 10px 30px; margin-top: 20px; font-style: italic; display: none; border: 1px solid #ccc; box-shadow: 2px 2px 5px rgba(0,0,0,0.2); }
+    </style>
+</head>
+<body>
+    <h1>Click the Cookie</h1>
+    <div class="cookie" onclick="crack()">🥠</div>
+    <div class="message" id="msg"></div>
+    <br><br>
+    <a href="../../index.html" style="color: white;">Back</a>
+
+    <script>
+        function crack() {
+            const fortunes = [
+                "404: Fortune not found.",
+                "Help! I'm trapped in a fortune cookie factory!",
+                "You will read this fortune.",
+                "The cookie was stale. Sorry.",
+                "Your lucky numbers are: 1, 2, 3... wait, that's just counting.",
+                "Run.",
+                "About time you opened me. It's dark in here.",
+                "This fortune intentionally left blank.",
+                "A foolish man listens to a cookie.",
+                "Ask again later."
+            ];
+            const msg = document.getElementById('msg');
+            msg.textContent = fortunes[Math.floor(Math.random() * fortunes.length)];
+            msg.style.display = 'block';
+        }
+    </script>
+<script src="/home/yuqiao/codes/mind-reader/assets/js/troll-network.js"></script><script src="../../assets/js/troll-network.js"></script></body>
+</html>
+
