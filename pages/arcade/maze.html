@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mouse Maze</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500&display=swap" rel="stylesheet">
+    <style>
+        body { background: #0a0a0c; color: white; font-family: 'Space Grotesk', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        #maze { position: relative; width: 500px; height: 400px; background: #222; overflow: hidden; cursor: none; }
+        .wall { position: absolute; background: #ff7675; }
+        .start, .end { position: absolute; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        .start { background: #55efc4; top: 0; left: 0; color: #000; }
+        .end { background: #0984e3; bottom: 0; right: 0; color: #fff; }
+        #status { font-size: 24px; margin-bottom: 20px; }
+        #cursor { width: 10px; height: 10px; background: white; border-radius: 50%; position: absolute; pointer-events: none; z-index: 10; }
+    </style>
+</head>
+<body>
+    <div id="status">Reach the Blue Box</div>
+    <div id="maze">
+        <div class="start">S</div>
+        <div class="end">E</div>
+        <div id="cursor"></div>
+        
+        <!-- Walls -->
+        <div class="wall" style="top: 50px; left: 50px; width: 400px; height: 20px;"></div>
+        <div class="wall" style="top: 120px; left: 0px; width: 350px; height: 20px;"></div>
+        <div class="wall" style="top: 190px; left: 100px; width: 400px; height: 20px;"></div>
+        <div class="wall" style="top: 260px; left: 0px; width: 200px; height: 20px;"></div>
+        <div class="wall" style="top: 260px; left: 250px; width: 250px; height: 20px;"></div>
+        <div class="wall" style="top: 330px; left: 50px; width: 400px; height: 20px;"></div>
+    </div>
+
+    <script>
+        const maze = document.getElementById('maze');
+        const cursor = document.getElementById('cursor');
+        const status = document.getElementById('status');
+        let playing = false;
+
+        maze.addEventListener('mousemove', (e) => {
+            const rect = maze.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            cursor.style.left = (x - 5) + 'px';
+            cursor.style.top = (y - 5) + 'px';
+
+            if (!playing) return;
+
+            // Collision detection logic simplistic (point vs element)
+            const element = document.elementFromPoint(e.clientX, e.clientY);
+            if (element && element.classList.contains('wall')) {
+                gameOver();
+            } else if (element && element.classList.contains('end')) {
+                win();
+            }
+        });
+
+        maze.addEventListener('mouseenter', () => {
+            status.innerText = "Go!";
+            playing = true;
+            cursor.style.display = 'block';
+        });
+        
+        maze.addEventListener('mouseleave', () => {
+            playing = false;
+            status.innerText = "You left the maze!";
+            cursor.style.display = 'none';
+        });
+
+        function gameOver() {
+            playing = false;
+            status.innerText = "You hit a wall! Restart from green.";
+            maze.style.background = "#d63031";
+            setTimeout(() => maze.style.background = "#222", 500);
+        }
+
+        function win() {
+            playing = false;
+            status.innerText = "You Win!";
+            maze.style.background = "#00b894";
+        }
+    </script>
+</body>
+</html>
+

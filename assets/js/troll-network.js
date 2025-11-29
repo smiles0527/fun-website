@@ -5,7 +5,7 @@
         #troll-network-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(255,255,255,0.8); z-index: 10000;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 15vh;
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; color: #333;
             backdrop-filter: blur(10px);
         }

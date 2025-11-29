@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Flappy Troll</title>
+    <style>
+        body { margin: 0; overflow: hidden; background: #70c5ce; font-family: monospace; }
+        canvas { display: block; margin: 0 auto; background: #70c5ce; }
+    </style>
+</head>
+<body>
+    <canvas id="bird" width="320" height="480"></canvas>
+    <script>
+        var cvs = document.getElementById("bird");
+        var ctx = cvs.getContext("2d");
+
+        var bird = { x: 50, y: 150, w: 20, h: 20, dy: 0, gravity: 0.25, jump: 4.6, score: 0 };
+        var pipe = [];
+        pipe[0] = { x: cvs.width, y: 0 };
+        
+        var gap = 85;
+        var constant; 
+        
+        document.addEventListener("keydown", moveUp);
+        document.addEventListener("click", moveUp);
+
+        function moveUp(){ bird.dy = -bird.jump; }
+
+        function draw(){
+            ctx.fillStyle = "#70c5ce";
+            ctx.fillRect(0,0,cvs.width,cvs.height);
+
+            for(var i = 0; i < pipe.length; i++){
+                constant = 242 + gap; // pipe height approximation
+                ctx.fillStyle = "#2ecc71";
+                
+                // Top Pipe
+                ctx.fillRect(pipe[i].x, pipe[i].y - 242, 50, 242); // y is bottom of top pipe basically
+                // We need better pipe logic
+                var pipeH = 250;
+                var pipeY = pipe[i].y - pipeH; 
+                
+                ctx.fillRect(pipe[i].x, pipeY, 52, pipeH); // Top
+                ctx.fillRect(pipe[i].x, pipeY + pipeH + gap, 52, cvs.height); // Bottom
+
+                pipe[i].x--;
+
+                if( pipe[i].x == 125 ){
+                    pipe.push({ x : cvs.width, y : Math.floor(Math.random()*200) - 100 }); // Random Y offset
+                }
+
+                // Detect collision
+                if( bird.x + bird.w >= pipe[i].x && bird.x <= pipe[i].x + 52 && 
+                    (bird.y <= pipeY + pipeH || bird.y+bird.h >= pipeY + pipeH + gap) || bird.y + bird.h >= cvs.height){
+                    location.reload(); // Reload on death
+                }
+
+                if(pipe[i].x == 5){
+                    bird.score++;
+                }
+            }
+
+            ctx.fillStyle = "#e74c3c"; // Bird
+            ctx.fillRect(bird.x, bird.y, bird.w, bird.h);
+
+            bird.dy += bird.gravity;
+            bird.y += bird.dy;
+
+            ctx.fillStyle = "#000";
+            ctx.font = "20px Verdana";
+            ctx.fillText("Score : " + bird.score, 10, cvs.height-20);
+
+            requestAnimationFrame(draw);
+        }
+
+        // Fix pipe logic
+        pipe = [];
+        pipe.push({x: cvs.width, y: -100}); // y is top pipe offset
+
+        function drawV2() {
+            ctx.fillStyle = "#70c5ce";
+            ctx.fillRect(0,0,cvs.width,cvs.height);
+            
+            for(var i=0; i<pipe.length; i++) {
+                var p = pipe[i];
+                var pW = 50;
+                var pH = 300; // Max pipe height
+                var gap = 100;
+                
+                // Top Pipe
+                ctx.fillStyle = "#2ecc71";
+                ctx.fillRect(p.x, p.y, pW, pH);
+                
+                // Bottom Pipe
+                ctx.fillRect(p.x, p.y + pH + gap, pW, cvs.height);
+                
+                p.x -= 1.5;
+                
+                if (p.x == 150) {
+                    pipe.push({
+                        x: cvs.width,
+                        y: Math.floor(Math.random() * 200) - 250 
+                    });
+                }
+                
+                // Collision
+                if (
+                    bird.x < p.x + pW &&
+                    bird.x + bird.w > p.x &&
+                    (bird.y < p.y + pH || bird.y + bird.h > p.y + pH + gap) ||
+                    bird.y + bird.h >= cvs.height
+                ) {
+                    location.reload();
+                }
+                
+                if (p.x + pW < bird.x && !p.passed) {
+                    bird.score++;
+                    p.passed = true;
+                }
+            }
+            
+            // Bird
+            bird.dy += bird.gravity;
+            bird.y += bird.dy;
+            ctx.fillStyle = "#e74c3c";
+            ctx.fillRect(bird.x, bird.y, bird.w, bird.h);
+            
+            ctx.fillStyle = "white";
+            ctx.font = "24px monospace";
+            ctx.fillText(bird.score, 10, 30);
+            
+            requestAnimationFrame(drawV2);
+        }
+
+        drawV2();
+    </script>
+</body>
+</html>
+

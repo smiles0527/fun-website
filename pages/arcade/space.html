@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Space Invaders</title>
+    <style>
+        body { background: black; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; font-family: monospace; }
+        canvas { border: 1px solid #333; }
+    </style>
+</head>
+<body>
+    <canvas id="game" width="600" height="400"></canvas>
+    <script>
+        const canvas = document.getElementById('game');
+        const ctx = canvas.getContext('2d');
+
+        const player = { x: 300, y: 380, width: 30, height: 10, speed: 5 };
+        const bullets = [];
+        const enemies = [];
+        let score = 0;
+        let frame = 0;
+
+        // Spawn enemies
+        for(let r=0; r<3; r++) {
+            for(let c=0; c<8; c++) {
+                enemies.push({ x: 50 + c * 60, y: 30 + r * 40, width: 30, height: 20, alive: true, dir: 1 });
+            }
+        }
+
+        function update() {
+            frame++;
+            
+            // Move Bullets
+            for(let i=bullets.length-1; i>=0; i--) {
+                bullets[i].y -= 5;
+                if(bullets[i].y < 0) bullets.splice(i, 1);
+            }
+
+            // Move Enemies
+            let shift = false;
+            enemies.forEach(e => {
+                if (!e.alive) return;
+                e.x += 1 * e.dir; // global dir logic is complex, simplifying
+            });
+            
+            // Just simple bounce logic for block of enemies would be better but sticking to simple independent movement for now
+            // Actually let's make them move together
+            // Check edges
+            let rightMost = 0;
+            let leftMost = 600;
+            enemies.forEach(e => {
+                if(e.alive) {
+                    if(e.x > rightMost) rightMost = e.x;
+                    if(e.x < leftMost) leftMost = e.x;
+                }
+            });
+            
+            // This is getting complicated for a quick script. Let's do simple individual movement.
+             enemies.forEach(e => {
+                if (!e.alive) return;
+                e.x += Math.sin(frame / 50) * 2;
+                e.y += 0.05; // Slowly descend
+                
+                // Collision
+                bullets.forEach((b, bi) => {
+                    if (b.x > e.x && b.x < e.x + e.width && b.y > e.y && b.y < e.y + e.height) {
+                        e.alive = false;
+                        bullets.splice(bi, 1);
+                        score += 10;
+                    }
+                });
+                
+                if(e.y > 380) {
+                    alert("Game Over! Score: " + score);
+                    location.reload();
+                }
+            });
+
+            // Draw
+            ctx.fillStyle = 'black';
+            ctx.fillRect(0, 0, 600, 400);
+
+            ctx.fillStyle = '#00ff00';
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+
+            ctx.fillStyle = 'white';
+            bullets.forEach(b => ctx.fillRect(b.x, b.y, 4, 10));
+
+            ctx.fillStyle = 'red';
+            enemies.forEach(e => {
+                if(e.alive) ctx.fillRect(e.x, e.y, e.width, e.height);
+            });
+            
+            ctx.fillStyle = 'white';
+            ctx.fillText("Score: " + score, 10, 20);
+
+            requestAnimationFrame(update);
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if(e.key === 'ArrowLeft' && player.x > 0) player.x -= 10;
+            if(e.key === 'ArrowRight' && player.x < 570) player.x += 10;
+            if(e.key === ' ') bullets.push({ x: player.x + 13, y: player.y });
+        });
+
+        update();
+    </script>
+</body>
+</html>
+

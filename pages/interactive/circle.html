@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Circle Stop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #2d3436;
+            color: white;
+            font-family: 'Space Grotesk', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            user-select: none;
+        }
+        #game-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+        }
+        #target-circle {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            border: 5px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            box-sizing: border-box;
+        }
+        #growing-circle {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background: #0984e3;
+            border-radius: 50%;
+            width: 0;
+            height: 0;
+        }
+        .message {
+            position: absolute;
+            top: 20%;
+            text-align: center;
+            width: 100%;
+            font-size: 24px;
+            pointer-events: none;
+        }
+        #score { font-size: 40px; font-weight: bold; margin-bottom: 20px; }
+        .back-link {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: #ccc;
+            text-decoration: none;
+        }
+        #instructions {
+            margin-bottom: 20px;
+            color: #b2bec3;
+        }
+    </style>
+</head>
+<body>
+    <div id="score">Level 1</div>
+    <div id="instructions">Click/Space to stop the circle inside the ring</div>
+    
+    <div id="game-container">
+        <div id="target-circle"></div>
+        <div id="growing-circle"></div>
+        <div class="message" id="msg"></div>
+    </div>
+
+    <a href="../../index.html" class="back-link">← Back to Trollverse</a>
+
+    <script>
+        const target = document.getElementById('target-circle');
+        const growing = document.getElementById('growing-circle');
+        const msg = document.getElementById('msg');
+        
+        let level = 1;
+        let targetSize = 200;
+        let currentSize = 0;
+        let speed = 2;
+        let growingState = true;
+        let gameActive = false;
+        let tolerance = 20; // Acceptable pixel difference
+
+        function startLevel() {
+            gameActive = true;
+            growingState = true;
+            currentSize = 0;
+            
+            // Randomize target size
+            targetSize = Math.random() * 200 + 100;
+            target.style.width = targetSize + 'px';
+            target.style.height = targetSize + 'px';
+            
+            // Speed increases with level
+            speed = 2 + level * 0.5;
+            
+            // Randomize color
+            growing.style.background = `hsl(${Math.random()*360}, 70%, 60%)`;
+            
+            loop();
+        }
+
+        function loop() {
+            if (!gameActive) return;
+
+            currentSize += speed;
+            growing.style.width = currentSize + 'px';
+            growing.style.height = currentSize + 'px';
+
+            // Auto-fail if too big
+            if (currentSize > targetSize + tolerance) {
+                fail();
+                return;
+            }
+
+            requestAnimationFrame(loop);
+        }
+
+        function stop() {
+            if (!gameActive) {
+                // Restart
+                startLevel();
+                msg.innerText = "";
+                return;
+            }
+
+            gameActive = false;
+            const diff = Math.abs(currentSize - targetSize);
+
+            if (diff <= tolerance) {
+                // Win
+                level++;
+                document.getElementById('score').innerText = `Level ${level}`;
+                msg.innerText = "Perfect! Click to continue";
+                msg.style.color = "#55efc4";
+                tolerance = Math.max(5, tolerance - 1); // Gets harder
+            } else {
+                // Loss
+                level = 1;
+                document.getElementById('score').innerText = "Game Over";
+                msg.innerText = "Missed! Click to restart";
+                msg.style.color = "#ff7675";
+                tolerance = 20;
+            }
+        }
+
+        function fail() {
+            gameActive = false;
+            level = 1;
+            document.getElementById('score').innerText = "Too Big!";
+            msg.innerText = "Click to restart";
+            msg.style.color = "#ff7675";
+            tolerance = 20;
+        }
+
+        document.body.onmousedown = stop;
+        document.body.onkeydown = (e) => { if(e.code === 'Space') stop(); };
+        document.body.ontouchstart = (e) => { e.preventDefault(); stop(); };
+
+        startLevel();
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simon Troll</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500&display=swap" rel="stylesheet">
+    <style>
+        body { background: #0a0a0c; color: white; font-family: 'Space Grotesk', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        #game-board { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
+        .btn { width: 150px; height: 150px; border-radius: 20px; opacity: 0.5; cursor: pointer; transition: all 0.1s; border: none; }
+        .btn:active, .btn.active { opacity: 1; transform: scale(0.95); box-shadow: 0 0 30px currentColor; }
+        #green { background: #00b894; color: #00b894; }
+        #red { background: #ff7675; color: #ff7675; }
+        #yellow { background: #fdcb6e; color: #fdcb6e; }
+        #blue { background: #0984e3; color: #0984e3; }
+        #status { font-size: 24px; height: 30px; margin-bottom: 20px; }
+        #start { padding: 15px 30px; font-size: 18px; background: white; border: none; border-radius: 50px; cursor: pointer; font-family: inherit; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div id="status">Press Start</div>
+    <div id="game-board">
+        <button id="green" class="btn" onclick="handleInput(0)"></button>
+        <button id="red" class="btn" onclick="handleInput(1)"></button>
+        <button id="yellow" class="btn" onclick="handleInput(2)"></button>
+        <button id="blue" class="btn" onclick="handleInput(3)"></button>
+    </div>
+    <button id="start" onclick="startGame()">Start Game</button>
+
+    <script>
+        const colors = ['green', 'red', 'yellow', 'blue'];
+        let sequence = [];
+        let playerSequence = [];
+        let level = 0;
+        let playing = false;
+
+        function startGame() {
+            sequence = [];
+            level = 0;
+            playing = true;
+            document.getElementById('start').style.display = 'none';
+            nextRound();
+        }
+
+        function nextRound() {
+            playerSequence = [];
+            level++;
+            document.getElementById('status').innerText = `Level ${level}`;
+            sequence.push(Math.floor(Math.random() * 4));
+            playSequence();
+        }
+
+        async function playSequence() {
+            playing = false;
+            for (let i = 0; i < sequence.length; i++) {
+                await new Promise(r => setTimeout(r, 500));
+                const idx = sequence[i];
+                
+                // Troll: Sometimes flash the WRONG color visually but play correct sound (simulated here by just swapping ID visually briefly?)
+                // Actually let's keep it simple but fast.
+                
+                const btn = document.getElementById(colors[idx]);
+                btn.classList.add('active');
+                await new Promise(r => setTimeout(r, 300));
+                btn.classList.remove('active');
+            }
+            playing = true;
+            document.getElementById('status').innerText = "Your Turn";
+        }
+
+        function handleInput(idx) {
+            if (!playing) return;
+            
+            // Visual feedback
+            const btn = document.getElementById(colors[idx]);
+            btn.classList.add('active');
+            setTimeout(() => btn.classList.remove('active'), 200);
+
+            playerSequence.push(idx);
+            
+            if (playerSequence[playerSequence.length - 1] !== sequence[playerSequence.length - 1]) {
+                gameOver();
+                return;
+            }
+
+            if (playerSequence.length === sequence.length) {
+                playing = false;
+                setTimeout(nextRound, 1000);
+            }
+        }
+
+        function gameOver() {
+            playing = false;
+            document.getElementById('status').innerText = "Game Over!";
+            document.getElementById('start').style.display = 'block';
+            document.getElementById('start').innerText = "Try Again";
+        }
+    </script>
+</body>
+</html>
+

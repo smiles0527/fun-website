@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fill The Void</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #0a0a0c;
+            color: white;
+            font-family: 'Space Grotesk', sans-serif;
+            touch-action: none;
+        }
+        #ui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            pointer-events: none;
+        }
+        h1 { margin: 0; font-size: 24px; text-transform: uppercase; letter-spacing: 2px; }
+        p { margin: 5px 0 0; color: #a1a1aa; font-size: 14px; }
+        #stats { font-size: 20px; color: #00b894; margin-top: 10px; }
+        
+        #overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            background: rgba(0,0,0,0.8);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        button {
+            background: #00b894;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: bold;
+        }
+        button:hover { transform: scale(1.05); }
+        .back-link {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: #666;
+            text-decoration: none;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <div id="ui">
+        <h1>Fill The Void</h1>
+        <p>Hold Click to Grow. Release to Freeze. Don't touch the balls.</p>
+        <div id="stats">Level 1 - 0% / 66%</div>
+    </div>
+
+    <div id="overlay">
+        <h1 id="title">Fill The Void</h1>
+        <p id="msg">Fill 66% of the screen to advance.</p>
+        <button onclick="startGame()">Start Level 1</button>
+    </div>
+
+    <a href="../../index.html" class="back-link">← Back to Trollverse</a>
+
+    <canvas id="gameCanvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        
+        // Game State
+        let level = 1;
+        let balls = [];
+        let bubbles = [];
+        let growingBubble = null;
+        let isGameRunning = false;
+        let lives = 3;
+        
+        // Constants
+        const GOAL_PERCENT = 0.66;
+        const BASE_BALL_SPEED = 3;
+        
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            // Border box for game area to avoid edge cases
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Ball {
+            constructor() {
+                this.r = 5;
+                this.x = Math.random() * (width - 20) + 10;
+                this.y = Math.random() * (height - 20) + 10;
+                const angle = Math.random() * Math.PI * 2;
+                this.vx = Math.cos(angle) * (BASE_BALL_SPEED + level * 0.5);
+                this.vy = Math.sin(angle) * (BASE_BALL_SPEED + level * 0.5);
+                this.color = '#ff7675';
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // Wall Bounce
+                if (this.x < this.r || this.x > width - this.r) this.vx *= -1;
+                if (this.y < this.r || this.y > height - this.r) this.vy *= -1;
+
+                // Bubble Bounce
+                bubbles.forEach(b => {
+                    const dx = this.x - b.x;
+                    const dy = this.y - b.y;
+                    const dist = Math.sqrt(dx*dx + dy*dy);
+                    if (dist < this.r + b.r) {
+                        // Simple bounce logic (treat bubble as static circle)
+                        const angle = Math.atan2(dy, dx);
+                        this.vx = Math.cos(angle) * Math.abs(this.vx); // Force away
+                        this.vy = Math.sin(angle) * Math.abs(this.vy);
+                        // Jitter to prevent sticking
+                        this.x += this.vx;
+                        this.y += this.vy;
+                    }
+                });
+            }
+
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        class Bubble {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.r = 1;
+                this.growing = true;
+                this.color = `hsl(${Math.random()*360}, 70%, 60%)`;
+            }
+
+            grow() {
+                if (!this.growing) return;
+                this.r += 2;
+                
+                // Stop growing if touching wall
+                if (this.x - this.r < 0 || this.x + this.r > width ||
+                    this.y - this.r < 0 || this.y + this.r > height) {
+                    this.growing = false;
+                }
+
+                // Stop growing if touching other bubbles
+                for (let b of bubbles) {
+                    if (b === this) continue;
+                    const dist = Math.hypot(this.x - b.x, this.y - b.y);
+                    if (dist < this.r + b.r) {
+                        this.growing = false;
+                    }
+                }
+            }
+
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.strokeStyle = 'white';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+                ctx.fill();
+                if (this.growing) ctx.stroke();
+            }
+        }
+
+        function initLevel() {
+            balls = [];
+            bubbles = [];
+            growingBubble = null;
+            // Spawn balls
+            for (let i = 0; i < level + 1; i++) {
+                balls.push(new Ball());
+            }
+            updateStats();
+        }
+
+        function startGame() {
+            document.getElementById('overlay').style.display = 'none';
+            if (!isGameRunning) {
+                isGameRunning = true;
+                level = 1;
+                lives = 3;
+                initLevel();
+                loop();
+            } else {
+                // Next Level
+                initLevel();
+            }
+        }
+
+        function gameOver() {
+            document.getElementById('title').innerText = "Game Over";
+            document.getElementById('msg').innerText = `You reached Level ${level}`;
+            document.getElementById('overlay').style.display = 'flex';
+            document.querySelector('#overlay button').innerText = "Try Again";
+            isGameRunning = false;
+            level = 1;
+        }
+
+        function nextLevel() {
+            level++;
+            document.getElementById('title').innerText = "Level Complete";
+            document.getElementById('msg').innerText = `Ready for Level ${level}?`;
+            document.getElementById('overlay').style.display = 'flex';
+            document.querySelector('#overlay button').innerText = "Next Level";
+            // Pause loop implicitly by overlay
+        }
+
+        function updateStats() {
+            const totalArea = width * height;
+            const filledArea = bubbles.reduce((acc, b) => acc + (Math.PI * b.r * b.r), 0);
+            const percent = (filledArea / totalArea * 100).toFixed(1);
+            
+            document.getElementById('stats').innerText = `Level ${level} - ${percent}% / 66% (Lives: ${lives})`;
+            
+            if (percent >= 66) {
+                nextLevel();
+            }
+        }
+
+        // Input Handling
+        canvas.addEventListener('mousedown', (e) => {
+            if (!isGameRunning || growingBubble) return;
+            // Check if click is inside existing bubble (invalid)
+            // Check if click is safe
+            growingBubble = new Bubble(e.clientX, e.clientY);
+            bubbles.push(growingBubble);
+        });
+
+        canvas.addEventListener('mouseup', () => {
+            if (growingBubble) {
+                growingBubble.growing = false;
+                growingBubble = null;
+                updateStats();
+            }
+        });
+        
+        // Touch support
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            if (!isGameRunning || growingBubble) return;
+            const touch = e.touches[0];
+            growingBubble = new Bubble(touch.clientX, touch.clientY);
+            bubbles.push(growingBubble);
+        }, {passive: false});
+
+        canvas.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            if (growingBubble) {
+                growingBubble.growing = false;
+                growingBubble = null;
+                updateStats();
+            }
+        });
+
+        function loop() {
+            if (!isGameRunning && document.getElementById('overlay').style.display !== 'none') {
+                requestAnimationFrame(loop);
+                return;
+            }
+
+            ctx.fillStyle = '#0a0a0c';
+            ctx.fillRect(0, 0, width, height);
+
+            // Update & Draw Bubbles
+            bubbles.forEach(b => {
+                b.grow();
+                b.draw();
+            });
+
+            // Update & Draw Balls
+            balls.forEach(ball => {
+                ball.update();
+                ball.draw();
+
+                // Collision with growing bubble
+                if (growingBubble) {
+                    const dist = Math.hypot(ball.x - growingBubble.x, ball.y - growingBubble.y);
+                    if (dist < ball.r + growingBubble.r) {
+                        // Pop!
+                        bubbles.pop(); // Remove the growing bubble
+                        growingBubble = null;
+                        lives--;
+                        updateStats();
+                        if (lives <= 0) gameOver();
+                    }
+                }
+            });
+
+            if (isGameRunning) requestAnimationFrame(loop);
+        }
+        
+        loop();
+    </script>
+</body>
+</html>
+

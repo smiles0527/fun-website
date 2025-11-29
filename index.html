@@ -14,38 +14,25 @@
     <div class="visual-element circle-2"></div>
     <div class="visual-element grid-overlay"></div>
 
-    <div class="hero-section">
-        <div class="hero-content">
-            <h1 class="glitch-text" data-text="TROLLVERSE">TROLLVERSE</h1>
-            <p class="hero-sub">Award-Winningly Frustrating Digital Experiments.</p>
-            <a href="#collections" class="cta-button">Enter the Madness <i class="ri-arrow-down-line"></i></a>
+    <!-- Top Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <span class="glitch-logo" data-text="TROLLVERSE">TROLLVERSE</span>
         </div>
-    </div>
+        <div class="nav-menu">
+            <button class="nav-btn" onclick="randomInteractive()">
+                <i class="ri-gamepad-line"></i> Random Tool
+            </button>
+            <button class="nav-btn" onclick="randomVisual()">
+                <i class="ri-eye-line"></i> Random Visual
+            </button>
+            <button class="nav-btn special" onclick="randomAll()">
+                <i class="ri-shuffle-line"></i> I'm Feeling Lucky
+            </button>
+        </div>
+    </nav>
 
-    <div class="features-section">
-        <div class="feature-box">
-            <i class="ri-spam-3-line feature-icon"></i>
-            <h3>100% Useless</h3>
-            <p>Every tool has been scientifically engineered to waste your time efficiently.</p>
-        </div>
-        <div class="feature-box">
-            <i class="ri-bar-chart-grouped-line feature-icon"></i>
-            <h3>Productivity Killer</h3>
-            <p>Guaranteed to lower your efficiency by at least 400%.</p>
-        </div>
-        <div class="feature-box">
-            <i class="ri-code-s-slash-line feature-icon"></i>
-            <h3>AI-Free Chaos</h3>
-            <p>Hand-coded anomalies that no machine would be stupid enough to write.</p>
-        </div>
-    </div>
-    
     <div class="container" id="collections">
-        <div class="section-header">
-            <h2>The Collection</h2>
-            <p>Explore the archives of annoyance.</p>
-        </div>
-
         <div class="bento-grid">
             <!-- Hero / Featured -->
             <a href="pages/interactive/mind-reader.html" class="card span-2 span-row-2 featured">
@@ -336,9 +323,119 @@
                     <div class="card-desc">Entertainment for the desperate</div>
                 </div>
             </a>
+
+            <a href="pages/interactive/dodge.html" class="card span-2">
+                <div class="card-content">
+                    <div class="card-icon"><i class="ri-gamepad-line"></i></div>
+                    <div class="card-title">Dodge Dots</div>
+                    <div class="card-desc">Survive the chaos</div>
+                </div>
+            </a>
+
+            <a href="pages/interactive/fill.html" class="card span-2">
+                <div class="card-content">
+                    <div class="card-icon"><i class="ri-bubble-chart-line"></i></div>
+                    <div class="card-title">Fill The Void</div>
+                    <div class="card-desc">Strategic bubble blowing</div>
+                </div>
+            </a>
+
+            <a href="pages/interactive/polka.html" class="card span-2">
+                <div class="card-content">
+                    <div class="card-icon"><i class="ri-focus-3-line"></i></div>
+                    <div class="card-title">Polka Dot</div>
+                    <div class="card-desc">Eat small, avoid big</div>
+                </div>
+            </a>
+
+            <a href="pages/interactive/circle.html" class="card">
+                <div class="card-content">
+                    <div class="card-icon"><i class="ri-record-circle-line"></i></div>
+                    <div class="card-title">Circle Stop</div>
+                    <div class="card-desc">Perfect timing</div>
+                </div>
+            </a>
+        </div>
+
+        <div class="section-header" style="display: block; margin-top: 80px;">
+            <h2>Troll Arcade</h2>
+            <p>Classic games. No trolling. (Maybe)</p>
+        </div>
+
+        <div class="bento-grid">
+            <a href="pages/arcade/snake.html" class="card">
+                <div class="card-content">
+                    <div class="card-icon"><i class="ri-bug-line"></i></div>
+                    <div class="card-title">Snake</div>
+                    <div class="card-desc">Classic</div>
+                </div>
+            </a>
+            <a href="pages/arcade/pong.html" class="card">
+                <div class="card-content">
+                    <div class="card-icon"><i class="ri-ping-pong-line"></i></div>
+                    <div class="card-title">Pong</div>
+                    <div class="card-desc">Retro</div>
+                </div>
+            </a>
+            <a href="pages/arcade/stack.html" class="card">
+                <div class="card-content">
+                    <div class="card-icon"><i class="ri-stack-line"></i></div>
+                    <div class="card-title">Stacker</div>
+                    <div class="card-desc">Build High</div>
+                </div>
+            </a>
+            <a href="pages/arcade/simon.html" class="card">
+                <div class="card-content">
+                    <div class="card-icon"><i class="ri-lightbulb-line"></i></div>
+                    <div class="card-title">Simon</div>
+                    <div class="card-desc">Memory</div>
+                </div>
+            </a>
+            <a href="pages/arcade/flappy.html" class="card">
+                <div class="card-content">
+                    <div class="card-icon"><i class="ri-flight-takeoff-line"></i></div>
+                    <div class="card-title">Flappy</div>
+                    <div class="card-desc">Jump</div>
+                </div>
+            </a>
+            <a href="pages/arcade/whack.html" class="card">
+                <div class="card-content">
+                    <div class="card-icon"><i class="ri-hammer-line"></i></div>
+                    <div class="card-title">Whack</div>
+                    <div class="card-desc">Bonk</div>
+                </div>
+            </a>
+            <a href="pages/arcade/maze.html" class="card">
+                <div class="card-content">
+                    <div class="card-icon"><i class="ri-drag-move-line"></i></div>
+                    <div class="card-title">Maze</div>
+                    <div class="card-desc">Steady</div>
+                </div>
+            </a>
+            <a href="pages/arcade/runner.html" class="card">
+                <div class="card-content">
+                    <div class="card-icon"><i class="ri-run-line"></i></div>
+                    <div class="card-title">Dino</div>
+                    <div class="card-desc">Run</div>
+                </div>
+            </a>
+            <a href="pages/arcade/space.html" class="card">
+                <div class="card-content">
+                    <div class="card-icon"><i class="ri-rocket-line"></i></div>
+                    <div class="card-title">Space</div>
+                    <div class="card-desc">Shoot</div>
+                </div>
+            </a>
+            <a href="pages/arcade/breakout.html" class="card">
+                <div class="card-content">
+                    <div class="card-icon"><i class="ri-layout-grid-line"></i></div>
+                    <div class="card-title">Breakout</div>
+                    <div class="card-desc">Smash</div>
+                </div>
+            </a>
         </div>
     </div>
-
+    
     <footer class="site-footer">
         <p>© 2025 Trollverse Inc. All rights reserved (not really).</p>
         <div class="footer-links">
@@ -349,5 +446,48 @@
     </footer>
 
     <script src="assets/js/troll-network.js"></script>
+    <script>
+        // Random Navigation Functions
+        const interactivePages = [
+            'pages/interactive/mind-reader.html', 'pages/interactive/unclickable.html',
+            'pages/interactive/password.html', 'pages/interactive/love.html',
+            'pages/interactive/iq.html', 'pages/interactive/captcha.html',
+            'pages/interactive/scream.html', 'pages/interactive/ugly.html',
+            'pages/interactive/volume.html', 'pages/interactive/teleport.html',
+            'pages/interactive/typing.html', 'pages/interactive/date.html',
+            'pages/interactive/phone.html', 'pages/interactive/calculator.html',
+            'pages/interactive/age.html', 'pages/interactive/reaction.html',
+            'pages/interactive/battery.html', 'pages/interactive/map.html',
+            'pages/interactive/color.html', 'pages/interactive/lottery.html',
+            'pages/interactive/spam.html', 'pages/interactive/fortune.html',
+            'pages/interactive/unsubscribe.html', 'pages/interactive/terms.html',
+            'pages/interactive/bored.html'
+        ];
+
+        const visualPages = [
+            'pages/visual/virus.html', 'pages/visual/infinity.html',
+            'pages/visual/loading.html', 'pages/visual/gravity.html',
+            'pages/visual/dvd.html', 'pages/visual/dialup.html',
+            'pages/visual/chat.html', 'pages/visual/ram.html',
+            'pages/visual/pixel.html', 'pages/visual/mirror.html',
+            'pages/visual/horse.html'
+        ];
+
+        function randomInteractive() {
+            const page = interactivePages[Math.floor(Math.random() * interactivePages.length)];
+            window.location.href = page;
+        }
+
+        function randomVisual() {
+            const page = visualPages[Math.floor(Math.random() * visualPages.length)];
+            window.location.href = page;
+        }
+
+        function randomAll() {
+            const allPages = [...interactivePages, ...visualPages];
+            const page = allPages[Math.floor(Math.random() * allPages.length)];
+            window.location.href = page;
+        }
+    </script>
 </body>
 </html>

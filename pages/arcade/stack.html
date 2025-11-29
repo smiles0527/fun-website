@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stacker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500&display=swap" rel="stylesheet">
+    <style>
+        body { background: #0a0a0c; color: white; font-family: 'Space Grotesk', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        #game { background: #111; border: 2px solid #333; position: relative; width: 300px; height: 500px; overflow: hidden; }
+        .block { position: absolute; height: 25px; background: #0984e3; transition: none; }
+        #score { font-size: 30px; margin-bottom: 20px; }
+        #msg { position: absolute; top: 50%; width: 100%; text-align: center; font-size: 24px; display: none; }
+    </style>
+</head>
+<body onclick="place()">
+    <div id="score">0</div>
+    <div id="game">
+        <div id="msg">Game Over<br>Click to Restart</div>
+    </div>
+    <p>Click or Space to Place</p>
+
+    <script>
+        const game = document.getElementById('game');
+        let width = 100; // block width %
+        let speed = 10;
+        let direction = 1;
+        let currentBlock;
+        let prevBlock;
+        let level = 0;
+        let pos = 0; // 0 to 100
+        let gameRunning = true;
+        let timer;
+
+        function start() {
+            game.innerHTML = '<div id="msg">Game Over<br>Click to Restart</div>';
+            level = 0;
+            width = 50; // Start width
+            speed = 2;
+            gameRunning = true;
+            spawnBlock();
+        }
+
+        function spawnBlock() {
+            prevBlock = currentBlock;
+            currentBlock = document.createElement('div');
+            currentBlock.className = 'block';
+            currentBlock.style.width = width + '%';
+            currentBlock.style.bottom = (level * 25) + 'px';
+            currentBlock.style.backgroundColor = `hsl(${level * 10}, 70%, 60%)`;
+            game.appendChild(currentBlock);
+            
+            pos = 0;
+            direction = 1;
+            clearInterval(timer);
+            timer = setInterval(move, 20);
+        }
+
+        function move() {
+            pos += direction * speed;
+            if (pos + width > 100 || pos < 0) direction *= -1;
+            currentBlock.style.left = pos + '%';
+        }
+
+        function place() {
+            if (!gameRunning) { start(); return; }
+            
+            clearInterval(timer);
+            
+            if (level > 0) {
+                const prevLeft = parseFloat(prevBlock.style.left);
+                const prevWidth = parseFloat(prevBlock.style.width);
+                
+                const currentLeft = pos;
+                const currentRight = pos + width;
+                const prevRight = prevLeft + prevWidth;
+
+                if (currentLeft > prevRight || currentRight < prevLeft) {
+                    gameOver();
+                    return;
+                }
+
+                // Trim
+                let newWidth = width;
+                if (currentLeft < prevLeft) {
+                    newWidth -= (prevLeft - currentLeft);
+                    currentBlock.style.left = prevLeft + '%';
+                    pos = prevLeft;
+                } else if (currentRight > prevRight) {
+                    newWidth -= (currentRight - prevRight);
+                }
+                
+                width = newWidth;
+                currentBlock.style.width = width + '%';
+                
+                if (width <= 0) { gameOver(); return; }
+            }
+            
+            level++;
+            document.getElementById('score').innerText = level;
+            speed += 0.2;
+            
+            // Scroll down if high
+            if (level > 15) {
+                game.scrollTop = (level - 15) * 25;
+            }
+            
+            spawnBlock();
+        }
+
+        function gameOver() {
+            gameRunning = false;
+            document.getElementById('msg').style.display = 'block';
+        }
+
+        document.body.onkeydown = (e) => { if(e.code === 'Space') place(); };
+        start();
+    </script>
+</body>
+</html>
+

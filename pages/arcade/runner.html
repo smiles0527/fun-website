@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>T-Rex Runner</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500&display=swap" rel="stylesheet">
+    <style>
+        body { background: #fff; color: #333; font-family: 'Space Grotesk', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; overflow: hidden; }
+        #game { width: 600px; height: 200px; border-bottom: 2px solid #333; position: relative; overflow: hidden; }
+        #dino { width: 40px; height: 40px; background: #333; position: absolute; bottom: 0; left: 50px; }
+        .cactus { width: 20px; height: 40px; background: #d63031; position: absolute; bottom: 0; left: 600px; }
+        #score { font-size: 24px; position: absolute; top: 20px; right: 20px; }
+    </style>
+</head>
+<body onkeydown="jump()">
+    <div id="game">
+        <div id="dino"></div>
+        <div id="score">0</div>
+    </div>
+    <p>Space to Jump</p>
+
+    <script>
+        const dino = document.getElementById('dino');
+        const game = document.getElementById('game');
+        let isJumping = false;
+        let score = 0;
+        let gameRunning = true;
+
+        function jump() {
+            if (isJumping || !gameRunning) return;
+            isJumping = true;
+            
+            let upTimer = setInterval(() => {
+                if (!gameRunning) { clearInterval(upTimer); return; }
+                let bottom = parseInt(window.getComputedStyle(dino).getPropertyValue('bottom'));
+                if (bottom >= 100) {
+                    clearInterval(upTimer);
+                    let downTimer = setInterval(() => {
+                        if (!gameRunning) { clearInterval(downTimer); return; }
+                        let bottom = parseInt(window.getComputedStyle(dino).getPropertyValue('bottom'));
+                        if (bottom <= 0) {
+                            clearInterval(downTimer);
+                            isJumping = false;
+                        }
+                        dino.style.bottom = (bottom - 5) + 'px';
+                    }, 20);
+                }
+                dino.style.bottom = (bottom + 5) + 'px';
+            }, 20);
+        }
+
+        function createCactus() {
+            if (!gameRunning) return;
+            const cactus = document.createElement('div');
+            cactus.classList.add('cactus');
+            game.appendChild(cactus);
+
+            let cactusPosition = 600;
+            let randomTime = Math.random() * 1000 + 1000;
+
+            let timer = setInterval(() => {
+                if (!gameRunning) { clearInterval(timer); return; }
+                if (cactusPosition < -20) {
+                    clearInterval(timer);
+                    game.removeChild(cactus);
+                    score++;
+                    document.getElementById('score').innerText = score;
+                } else if (cactusPosition > 50 && cactusPosition < 90 && parseInt(dino.style.bottom || 0) < 40) {
+                    // Collision
+                    clearInterval(timer);
+                    gameRunning = false;
+                    document.body.innerHTML += '<h1>Game Over</h1><button onclick="location.reload()">Restart</button>';
+                } else {
+                    cactusPosition -= 5;
+                    cactus.style.left = cactusPosition + 'px';
+                }
+            }, 20);
+
+            setTimeout(createCactus, randomTime);
+        }
+
+        createCactus();
+        
+        document.addEventListener('touchstart', jump);
+    </script>
+</body>
+</html>
+
