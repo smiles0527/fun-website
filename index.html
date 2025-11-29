@@ -1,447 +1,160 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Mind Reader</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        body {
-            text-align: center;
-            margin-top: 50px;
-            font-size: 18px;
-            font-family: 'Poppins', sans-serif;
-            background-color: #f7f9fc;
-            color: #2d3436;
-        }
-        input {
-            font-size: 18px;
-            padding: 12px 20px;
-            margin: 20px;
-            border: 2px solid #dfe6e9;
-            border-radius: 12px;
-            outline: none;
-            transition: all 0.2s;
-        }
-        input:focus {
-            border-color: #6c5ce7;
-            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
-        }
-        button {
-            font-size: 18px;
-            padding: 12px 30px;
-            background-color: #6c5ce7;
-            color: white;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 600;
-            box-shadow: 0 4px 6px rgba(108, 92, 231, 0.2);
-            transition: all 0.2s;
-        }
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(108, 92, 231, 0.3);
-            background-color: #5b4cc4;
-        }
-        #progressContainer {
-            margin-top: 30px;
-            display: none;
-        }
-        #progressText {
-            margin-bottom: 10px;
-            font-size: 18px;
-        }
-        #progressBar {
-            width: 400px;
-            height: 10px;
-            background-color: #dfe6e9;
-            margin: 0 auto;
-            border: none;
-            border-radius: 5px;
-            overflow: hidden;
-        }        #progress {
-            height: 100%;
-            background-color: #6c5ce7;
-            width: 0%;
-            border-radius: 5px;
-        }        .explosion {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 100px;
-            color: #ff6b35;
-            text-shadow: 0 0 20px #ff6b35, 0 0 40px #ff6b35, 0 0 60px #ff6b35;
-            animation: explode 1s ease-out;
-            pointer-events: none;
-        }
-        .screen-flash {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,107,53,0.7) 50%, rgba(255,255,255,0.9) 100%);
-            animation: flash 1s ease-out;
-            pointer-events: none;
-            z-index: 9999;
-        }
-        .shake {
-            animation: shake 1s ease-in-out;
-        }
-        @keyframes explode {
-            0% {
-                transform: translate(-50%, -50%) scale(0.1);
-                opacity: 0;
-            }
-            50% {
-                transform: translate(-50%, -50%) scale(1.2);
-                opacity: 1;
-            }
-            100% {
-                transform: translate(-50%, -50%) scale(1);
-                opacity: 0;
-            }
-        }
-        @keyframes flash {
-            0% { opacity: 0; }
-            10% { opacity: 1; }
-            20% { opacity: 0; }
-            30% { opacity: 1; }
-            40% { opacity: 0; }
-            50% { opacity: 1; }
-            100% { opacity: 0; }
-        }
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10% { transform: translateX(-10px) translateY(-5px); }
-            20% { transform: translateX(10px) translateY(5px); }
-            30% { transform: translateX(-8px) translateY(-3px); }
-            40% { transform: translateX(8px) translateY(3px); }
-            50% { transform: translateX(-6px) translateY(-2px); }
-            60% { transform: translateX(6px) translateY(2px); }
-            70% { transform: translateX(-4px) translateY(-1px); }
-            80% { transform: translateX(4px) translateY(1px); }
-            90% { transform: translateX(-2px) translateY(-1px); }
-        }
-        nav {
-            background: white;
-            padding: 30px;
-            margin-bottom: 50px;
-            border-bottom: none;
-            text-align: left;
-            max-width: 900px;
-            margin-left: auto;
-            margin-right: auto;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-        }
-        h3 { 
-            margin-top: 0; 
-            margin-bottom: 20px; 
-            font-size: 14px; 
-            color: #b2bec3; 
-            text-transform: uppercase; 
-            letter-spacing: 1px;
-            border-bottom: 1px solid #f1f2f6; 
-            padding-bottom: 10px;
-        }
-        .link-group { margin-bottom: 30px; }
-        nav a { 
-            margin: 5px; 
-            text-decoration: none; 
-            color: #fff; 
-            font-weight: 500; 
-            display: inline-block; 
-            padding: 8px 16px;
-            background: #b2bec3;
-            border-radius: 50px;
-            border: none;
-            font-size: 14px;
-            transition: all 0.2s;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        
-        /* Custom Themes per Button */
-        /* Free Money: Gold/Green */
-        a[href*="unclickable"] { background: #f1c40f; color: #fff; }
-        a[href*="unclickable"]:hover { background: #f39c12; }
-
-        /* Ultimate Surprise: Blue Spinner */
-        a[href*="loading"] { background: #3498db; color: #fff; }
-        a[href*="loading"]:hover { background: #2980b9; }
-
-        /* System Update: Red Alert */
-        a[href*="virus"] { background: #e74c3c; color: #fff; }
-        a[href*="virus"]:hover { background: #c0392b; }
-
-        /* Gravity: Purple Space */
-        a[href*="gravity"] { background: #9b59b6; color: #fff; }
-        a[href*="gravity"]:hover { background: #8e44ad; }
-
-        /* DVD: Black Retro */
-        a[href*="dvd"] { background: #2d3436; color: #fff; }
-        a[href*="dvd"]:hover { background: #000; }
-
-        /* The Answer: Deep Blue Abyss */
-        a[href*="infinity"] { background: #0984e3; color: #fff; }
-        a[href*="infinity"]:hover { background: #74b9ff; }
-
-        /* Password: Lock Green */
-        a[href*="password"] { background: #2ecc71; color: #fff; }
-        a[href*="password"]:hover { background: #27ae60; }
-
-        /* Love: Pink */
-        a[href*="love"] { background: #ff7675; color: #fff; }
-        a[href*="love"]:hover { background: #d63031; }
-
-        /* IQ: Smart Blue */
-        a[href*="iq"] { background: #74b9ff; color: #fff; }
-        a[href*="iq"]:hover { background: #0984e3; }
-
-        /* Captcha: Confusing Grey */
-        a[href*="captcha"] { background: #636e72; color: #fff; }
-        a[href*="captcha"]:hover { background: #2d3436; }
-
-        /* Slow Internet: Old Beige */
-        a[href*="dialup"] { background: #fab1a0; color: #fff; }
-        a[href*="dialup"]:hover { background: #e17055; }
-
-        /* Ugly Meter: Biohazard Green */
-        a[href*="ugly"] { background: #00b894; color: #fff; }
-        a[href*="ugly"]:hover { background: #55efc4; }
-
-        /* Chat: Friendly Blue */
-        a[href*="chat"] { background: #00cec9; color: #fff; }
-        a[href*="chat"]:hover { background: #81ecec; }
-
-        /* RAM: Tech Green */
-        a[href*="ram"] { background: #009432; color: #fff; }
-        a[href*="ram"]:hover { background: #006266; }
-
-        /* Volume: Loud Orange */
-        a[href*="volume"] { background: #fdcb6e; color: #fff; }
-        a[href*="volume"]:hover { background: #ffeaa7; }
-
-        /* Typing: Keyboard Grey */
-        a[href*="typing"] { background: #b2bec3; color: #fff; }
-        a[href*="typing"]:hover { background: #636e72; }
-
-        /* Date: Calendar Red */
-        a[href*="date"] { background: #ff7675; color: #fff; }
-        a[href*="date"]:hover { background: #fab1a0; }
-
-        /* Phone: Dial Green */
-        a[href*="phone"] { background: #55efc4; color: #fff; }
-        a[href*="phone"]:hover { background: #00b894; }
-
-        /* Calculator: Math Orange */
-        a[href*="calculator"] { background: #e17055; color: #fff; }
-        a[href*="calculator"]:hover { background: #d63031; }
-
-        /* Age: Warning Yellow */
-        a[href*="age"] { background: #fdcb6e; color: #fff; }
-        a[href*="age"]:hover { background: #e1b12c; }
-
-        /* Reaction: Fast Red */
-        a[href*="reaction"] { background: #d63031; color: #fff; }
-        a[href*="reaction"]:hover { background: #c0392b; }
-
-        /* Battery: Energy Yellow */
-        a[href*="battery"] { background: #f1c40f; color: #fff; }
-        a[href*="battery"]:hover { background: #f39c12; }
-
-        /* Map: Ocean Blue */
-        a[href*="map"] { background: #74b9ff; color: #fff; }
-        a[href*="map"]:hover { background: #0984e3; }
-
-        /* Color: Rainbow (Gradient) */
-        a[href*="color"] { background: linear-gradient(45deg, #ff7675, #74b9ff); color: #fff; }
-        a[href*="color"]:hover { background: linear-gradient(45deg, #d63031, #0984e3); }
-
-        /* Lottery: Gold */
-        a[href*="lottery"] { background: #f1c40f; color: #fff; border: 1px solid #e67e22; }
-        a[href*="lottery"]:hover { background: #f39c12; }
-
-        /* Spam: Alert Red */
-        a[href*="spam"] { background: #ff0000; color: #fff; }
-        a[href*="spam"]:hover { background: #cc0000; }
-
-        /* Fortune: Cookie Brown */
-        a[href*="fortune"] { background: #cd6133; color: #fff; }
-        a[href*="fortune"]:hover { background: #a6512b; }
-
-        /* Unsubscribe: Danger Red */
-        a[href*="unsubscribe"] { background: #2d3436; color: #fff; }
-        a[href*="unsubscribe"]:hover { background: #636e72; }
-
-        /* ToS: Boring Grey */
-        a[href*="terms"] { background: #b2bec3; color: #fff; }
-        a[href*="terms"]:hover { background: #dfe6e9; color: #636e72; }
-
-        /* Pixel: Glitch Black */
-        a[href*="pixel"] { background: #000; color: #0f0; font-family: monospace; }
-        a[href*="pixel"]:hover { background: #2d3436; }
-
-        /* Mirror: Silver */
-        a[href*="mirror"] { background: #dfe6e9; color: #636e72; }
-        a[href*="mirror"]:hover { background: #b2bec3; color: #fff; }
-
-        /* Horse: Brown */
-        a[href*="horse"] { background: #8d6e63; color: #fff; }
-        a[href*="horse"]:hover { background: #6d4c41; }
-
-        nav a:hover { 
-            color: white; 
-            transform: translateY(-2px);
-        }
-    </style>
+    <title>Trollverse</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-    <nav>
-        <div class="link-group">
-            <h3>Interactive / Tools</h3>
-            <a href="pages/interactive/password.html">Password Check</a>
-            <a href="pages/interactive/love.html">Love Calc</a>
-            <a href="pages/interactive/iq.html">IQ Test</a>
-            <a href="pages/interactive/captcha.html">Captcha</a>
-            <a href="pages/interactive/ugly.html">Ugly Meter</a>
-            <a href="pages/interactive/volume.html">Volume</a>
-            <a href="pages/interactive/typing.html">Typing</a>
-            <a href="pages/interactive/date.html">Date Picker</a>
-            <a href="pages/interactive/phone.html">Phone Input</a>
-            <a href="pages/interactive/calculator.html">Calculator</a>
-            <a href="pages/interactive/age.html">Age Check</a>
-            <a href="pages/interactive/reaction.html">Reaction Time</a>
-            <a href="pages/interactive/battery.html">Battery</a>
-            <a href="pages/interactive/map.html">Find House</a>
-            <a href="pages/interactive/color.html">Color Test</a>
-            <a href="pages/interactive/lottery.html">Lottery</a>
-            <a href="pages/interactive/spam.html">You Won</a>
-            <a href="pages/interactive/fortune.html">Fortune Cookie</a>
-            <a href="pages/interactive/unsubscribe.html">Unsubscribe</a>
-            <a href="pages/interactive/terms.html">ToS</a>
-            <a href="pages/interactive/unclickable.html">Free Money</a>
-        </div>
-
-        <div class="link-group">
-            <h3>Visual / Simulations</h3>
-            <a href="pages/visual/loading.html">Ultimate Surprise</a>
-            <a href="pages/visual/virus.html">System Update</a>
-            <a href="pages/visual/gravity.html">Gravity</a>
-            <a href="pages/visual/dvd.html">DVD</a>
-            <a href="pages/visual/infinity.html">The Answer</a>
-            <a href="pages/visual/dialup.html">Slow Internet</a>
-            <a href="pages/visual/chat.html">Chat Support</a>
-            <a href="pages/visual/ram.html">Download RAM</a>
-            <a href="pages/visual/pixel.html">Dead Pixel</a>
-            <a href="pages/visual/mirror.html">Mirror</a>
-            <a href="pages/visual/horse.html">Spinning Horse</a>
-        </div>
-    </nav>
-
-    <h1>Mind Reader</h1>
-    <p>Pick any number you want, I will read your mind</p>
-    <input type="text" id="numberInput">
-    <button onclick="readMind()">Read my mind</button>
-    
-    <div id="progressContainer">
-        <div id="progressText">Reading your mind...</div>
-        <div id="progressBar">
-            <div id="progress"></div>
+    <div class="header">
+        <div class="container">
+            <h1>Trollverse</h1>
+            <p>A collection of digital frustrations and anomalies.</p>
         </div>
     </div>
-    
-    <audio id="explosionSound" preload="auto">
-        <source src="assets/explosion.mp3" type="audio/mpeg">
-    </audio>
+
+    <div class="container">
+        <div class="section-title">Interactive Tools</div>
+        <div class="grid">
+            <a href="pages/interactive/mind-reader.html" class="card">
+                <div class="card-title">Mind Reader</div>
+                <div class="card-desc">I know what you're thinking</div>
+            </a>
+            <a href="pages/interactive/password.html" class="card">
+                <div class="card-title">Password Check</div>
+                <div class="card-desc">Is your security secure?</div>
+            </a>
+            <a href="pages/interactive/love.html" class="card">
+                <div class="card-title">Love Calculator</div>
+                <div class="card-desc">Scientifically accurate</div>
+            </a>
+            <a href="pages/interactive/iq.html" class="card">
+                <div class="card-title">IQ Test</div>
+                <div class="card-desc">Measure your brilliance</div>
+            </a>
+            <a href="pages/interactive/captcha.html" class="card">
+                <div class="card-title">Captcha</div>
+                <div class="card-desc">Are you a robot?</div>
+            </a>
+            <a href="pages/interactive/ugly.html" class="card">
+                <div class="card-title">Ugly Meter</div>
+                <div class="card-desc">Face analysis AI</div>
+            </a>
+            <a href="pages/interactive/volume.html" class="card">
+                <div class="card-title">Volume Control</div>
+                <div class="card-desc">Precise audio adjustment</div>
+            </a>
+            <a href="pages/interactive/typing.html" class="card">
+                <div class="card-title">Typing Test</div>
+                <div class="card-desc">Test your WPM</div>
+            </a>
+            <a href="pages/interactive/date.html" class="card">
+                <div class="card-title">Date Picker</div>
+                <div class="card-desc">Select your birth date</div>
+            </a>
+            <a href="pages/interactive/phone.html" class="card">
+                <div class="card-title">Phone Input</div>
+                <div class="card-desc">Enter your number</div>
+            </a>
+            <a href="pages/interactive/calculator.html" class="card">
+                <div class="card-title">Calculator</div>
+                <div class="card-desc">Solves math problems</div>
+            </a>
+            <a href="pages/interactive/age.html" class="card">
+                <div class="card-title">Age Check</div>
+                <div class="card-desc">Verify your age</div>
+            </a>
+            <a href="pages/interactive/reaction.html" class="card">
+                <div class="card-title">Reaction Time</div>
+                <div class="card-desc">Test your reflexes</div>
+            </a>
+            <a href="pages/interactive/battery.html" class="card">
+                <div class="card-title">Battery Charger</div>
+                <div class="card-desc">Manual charging</div>
+            </a>
+            <a href="pages/interactive/map.html" class="card">
+                <div class="card-title">Find House</div>
+                <div class="card-desc">Locate your home</div>
+            </a>
+            <a href="pages/interactive/color.html" class="card">
+                <div class="card-title">Color Test</div>
+                <div class="card-desc">Identify the color</div>
+            </a>
+            <a href="pages/interactive/lottery.html" class="card">
+                <div class="card-title">Lottery</div>
+                <div class="card-desc">Scratch & Win</div>
+            </a>
+            <a href="pages/interactive/spam.html" class="card">
+                <div class="card-title">You Won</div>
+                <div class="card-desc">Claim your prize</div>
+            </a>
+            <a href="pages/interactive/fortune.html" class="card">
+                <div class="card-title">Fortune Cookie</div>
+                <div class="card-desc">Predict your future</div>
+            </a>
+            <a href="pages/interactive/unsubscribe.html" class="card">
+                <div class="card-title">Unsubscribe</div>
+                <div class="card-desc">Leave our list</div>
+            </a>
+            <a href="pages/interactive/terms.html" class="card">
+                <div class="card-title">Terms of Service</div>
+                <div class="card-desc">Please read carefully</div>
+            </a>
+            <a href="pages/interactive/unclickable.html" class="card">
+                <div class="card-title">Free Money</div>
+                <div class="card-desc">Click to claim</div>
+            </a>
+        </div>
+
+        <div class="section-title">Visual Simulations</div>
+        <div class="grid">
+            <a href="pages/visual/loading.html" class="card">
+                <div class="card-title">Ultimate Surprise</div>
+                <div class="card-desc">Loading...</div>
+            </a>
+            <a href="pages/visual/virus.html" class="card">
+                <div class="card-title">System Update</div>
+                <div class="card-desc">Important patch</div>
+            </a>
+            <a href="pages/visual/gravity.html" class="card">
+                <div class="card-title">Gravity</div>
+                <div class="card-desc">Physics engine</div>
+            </a>
+            <a href="pages/visual/dvd.html" class="card">
+                <div class="card-title">DVD</div>
+                <div class="card-desc">Bouncing logo</div>
+            </a>
+            <a href="pages/visual/infinity.html" class="card">
+                <div class="card-title">The Answer</div>
+                <div class="card-desc">Scroll to find out</div>
+            </a>
+            <a href="pages/visual/dialup.html" class="card">
+                <div class="card-title">Slow Internet</div>
+                <div class="card-desc">Experience the 90s</div>
+            </a>
+            <a href="pages/visual/chat.html" class="card">
+                <div class="card-title">Chat Support</div>
+                <div class="card-desc">Talk to an agent</div>
+            </a>
+            <a href="pages/visual/ram.html" class="card">
+                <div class="card-title">Download RAM</div>
+                <div class="card-desc">Boost performance</div>
+            </a>
+            <a href="pages/visual/pixel.html" class="card">
+                <div class="card-title">Dead Pixel</div>
+                <div class="card-desc">Screen diagnostic</div>
+            </a>
+            <a href="pages/visual/mirror.html" class="card">
+                <div class="card-title">Mirror</div>
+                <div class="card-desc">Reflect yourself</div>
+            </a>
+            <a href="pages/visual/horse.html" class="card">
+                <div class="card-title">Spinning Horse</div>
+                <div class="card-desc">Rotational equine</div>
+            </a>
+        </div>
+    </div>
 
     <script src="assets/js/troll-network.js"></script>
-    <script>
-        function readMind() {
-            const number = document.getElementById('numberInput').value;
-            if (!number) {
-                alert('Please enter a number first!');
-                return;
-            }
-
-            // Troll Network Logging
-            if (window.TrollNetwork) {
-                window.TrollNetwork.log(`is thinking of the number ${number}`);
-            }
-            
-            const progressContainer = document.getElementById('progressContainer');
-            const progressText = document.getElementById('progressText');
-            const progress = document.getElementById('progress');
-            
-            const messages = [
-                "Reading your brain...",
-                "Analyzing brain pattern...",
-                "Connecting to your brain via bluetooth...",
-                "Calculating 6.37E8913284919827489 possible combinations..."
-            ];
-            
-            let currentMessage = 0;
-            progressText.textContent = messages[0];
-            progressContainer.style.display = 'block';
-            
-            let width = 0;
-            let speed = 1;
-            
-            const interval = setInterval(() => {
-                if (width >= 25 && currentMessage === 0) {
-                    currentMessage = 1;
-                    progressText.textContent = messages[1];
-                } else if (width >= 50 && currentMessage === 1) {
-                    currentMessage = 2;
-                    progressText.textContent = messages[2];
-                } else if (width >= 75 && currentMessage === 2) {
-                    currentMessage = 3;
-                    progressText.textContent = messages[3];
-                }
-                
-                if (width < 20) {
-                    speed = 0.3 + (width / 20) * 0.9; 
-                } else if (width > 80) {
-                    speed = 1.2 - ((width - 80) / 20) * 0.9; 
-                } else {
-                    speed = 1.2;
-                }
-                
-                width += speed;
-                progress.style.width = width + '%';
-                
-                if (width >= 100) {
-                    clearInterval(interval);
-    
-                    const explosionSound = document.getElementById('explosionSound');
-                    explosionSound.currentTime = 0;
-                    explosionSound.play();
-    
-                    const explosion = document.createElement('div');
-                    explosion.className = 'explosion';
-                    explosion.textContent = '💥';
-                    document.body.appendChild(explosion);
-                    
-                    const flash = document.createElement('div');
-                    flash.className = 'screen-flash';
-                    document.body.appendChild(flash);
-                    
-                    document.body.classList.add('shake');
-                    
-                    setTimeout(() => {
-                        document.body.removeChild(explosion);
-                        document.body.removeChild(flash);
-                        document.body.classList.remove('shake');
-                        progressText.textContent = `YOU WERE THINKING OF THE NUMBER ${number} 🤯😲`;
-                        setTimeout(() => {
-                            progressContainer.style.display = 'none';
-                            progress.style.width = '0%';
-                        }, 3000);
-                    }, 1000);
-                }
-            }, 80);
-        }
-    </script>
 </body>
 </html>
-
