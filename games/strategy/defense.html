@@ -20,6 +20,14 @@
             color: #c5c6c7; 
             user-select: none; 
         }
+        body::after {
+            content: "";
+            position: absolute; inset: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
         canvas { display: block; cursor: crosshair; }
         
         /* UI Overlay */
@@ -118,48 +126,69 @@
         #shop-modal {
             display: none; position: absolute; 
             top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 85%; height: 85%;
-            background: rgba(11, 12, 16, 0.98); border: 2px solid #f1c40f;
+            width: 90%; height: 90%;
+            background: rgba(11, 12, 16, 0.98); 
+            border: 1px solid #66fcf1;
             display: flex; flex-direction: column;
-            box-shadow: 0 0 100px rgba(241, 196, 15, 0.2);
+            box-shadow: 0 0 50px rgba(102, 252, 241, 0.1);
             z-index: 1000;
+            pointer-events: auto; /* CRITICAL FIX */
+            backdrop-filter: blur(10px);
         }
         .shop-header {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 20px; border-bottom: 1px solid #333;
-            background: rgba(20, 20, 25, 0.9);
+            padding: 20px 30px; border-bottom: 1px solid rgba(102, 252, 241, 0.3);
+            background: rgba(20, 20, 25, 0.95);
         }
-        .shop-header h2 { margin: 0; color: #f1c40f; font-family: 'Rajdhani'; font-size: 2.5rem; letter-spacing: 4px; text-shadow: 0 0 10px #f1c40f; }
+        .shop-header h2 { margin: 0; color: #66fcf1; font-family: 'Rajdhani'; font-size: 2.5rem; letter-spacing: 4px; text-shadow: 0 0 10px rgba(102, 252, 241, 0.5); }
         .shop-tabs {
-            display: flex; gap: 5px; padding: 10px 20px; background: rgba(0,0,0,0.5); overflow-x: auto;
+            display: flex; gap: 2px; padding: 0; background: rgba(0,0,0,0.8); overflow-x: auto;
+            border-bottom: 1px solid rgba(102, 252, 241, 0.3);
         }
         .shop-tab {
-            padding: 12px 25px; background: #111; color: #666; border: 1px solid #333;
-            cursor: pointer; font-family: 'Rajdhani'; font-weight: bold; font-size: 1.1rem; transition: 0.2s;
-            white-space: nowrap;
+            padding: 15px 30px; background: #0b0c10; color: #888; border: none; border-right: 1px solid #222;
+            cursor: pointer; font-family: 'Rajdhani'; font-weight: bold; font-size: 1.2rem; transition: 0.2s;
+            white-space: nowrap; flex-grow: 1; text-align: center;
         }
-        .shop-tab:hover { color: #fff; background: #222; }
-        .shop-tab.active { color: #000; background: #f1c40f; border-color: #f1c40f; box-shadow: 0 0 15px #f1c40f; }
+        .shop-tab:hover { color: #fff; background: #1f2833; }
+        .shop-tab.active { color: #000; background: #66fcf1; box-shadow: 0 0 20px rgba(102, 252, 241, 0.3); }
         
         .shop-content {
-            flex: 1; overflow-y: auto; padding: 20px;
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;
+            flex: 1; overflow-y: auto; padding: 30px;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px;
+            background: 
+                linear-gradient(rgba(11, 12, 16, 0.9), rgba(11, 12, 16, 0.9)),
+                linear-gradient(0deg, rgba(102, 252, 241, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(102, 252, 241, 0.03) 1px, transparent 1px);
+            background-size: 100% 100%, 20px 20px, 20px 20px;
         }
         .shop-item {
-            background: rgba(255,255,255,0.02); border: 1px solid #333;
-            padding: 20px; display: flex; flex-direction: column; gap: 10px;
+            background: rgba(31, 40, 51, 0.6); border: 1px solid rgba(102, 252, 241, 0.2);
+            padding: 20px; display: flex; flex-direction: column; gap: 15px;
             transition: 0.2s; position: relative; overflow: hidden;
+            clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px);
         }
-        .shop-item:hover { border-color: #f1c40f; background: rgba(241, 196, 15, 0.05); box-shadow: 0 0 20px rgba(241, 196, 15, 0.1); transform: translateY(-2px); }
-        .shop-item h3 { margin: 0; color: #f1c40f; font-size: 1.3rem; }
-        .shop-item p { margin: 0; color: #aaa; font-size: 0.9rem; line-height: 1.4; flex-grow: 1; }
+        .shop-item:hover { border-color: #66fcf1; background: rgba(31, 40, 51, 0.9); transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .shop-item h3 { margin: 0; color: #fff; font-size: 1.4rem; letter-spacing: 1px; }
+        .shop-item p { margin: 0; color: #aeb6bf; font-size: 0.95rem; line-height: 1.5; flex-grow: 1; }
+        
+        .progress-bar {
+            height: 6px; background: #111; width: 100%; position: relative; margin-top: 5px;
+        }
+        .progress-fill {
+            height: 100%; background: #66fcf1; width: 0%; transition: 0.3s;
+            box-shadow: 0 0 10px #66fcf1;
+        }
+        
         .shop-btn {
-            background: linear-gradient(90deg, #f1c40f, #e67e22); border: none;
-            color: #000; font-weight: bold; padding: 12px; cursor: pointer;
-            font-family: inherit; margin-top: 10px; text-transform: uppercase; letter-spacing: 1px;
+            background: transparent; border: 1px solid #66fcf1;
+            color: #66fcf1; font-weight: bold; padding: 12px; cursor: pointer;
+            font-family: inherit; margin-top: 10px; text-transform: uppercase; letter-spacing: 2px;
+            transition: 0.2s; font-size: 1rem;
         }
-        .shop-btn:disabled { opacity: 0.3; filter: grayscale(1); cursor: not-allowed; background: #333; color: #888; }
-        .shop-lvl { font-size: 0.9rem; color: #66fcf1; align-self: flex-end; }
+        .shop-btn:hover:not(:disabled) { background: #66fcf1; color: #000; box-shadow: 0 0 20px rgba(102, 252, 241, 0.5); }
+        .shop-btn:disabled { opacity: 0.5; border-color: #444; color: #444; cursor: not-allowed; }
+        .shop-lvl { font-size: 0.8rem; color: #66fcf1; opacity: 0.7; text-align: right; }
 
         /* Game Over */
         #game-over {
@@ -174,6 +203,14 @@
             font-family: inherit; transition: 0.2s;
         }
         #restart-btn:hover { background: #66fcf1; color: #000; }
+        
+        /* Global Button Feedback */
+        button:active, .turret-btn:active, .ctrl-btn:active, .shop-tab:active, .shop-btn:active {
+            transform: scale(0.95) !important;
+        }
+        button, .turret-btn, .ctrl-btn, .shop-tab, .shop-btn, .ctx-btn {
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -233,8 +270,14 @@
 
         <div id="shop-modal" style="display: none;">
             <div class="shop-header">
-                <h2>RESEARCH LAB</h2>
-                <button class="ctrl-btn" onclick="toggleShop()"><i class="ri-close-line"></i></button>
+                <div style="display:flex; flex-direction:column;">
+                    <h2>RESEARCH LAB</h2>
+                    <small style="color:#888; font-size:0.8rem;">Click tabs to switch categories</small>
+                </div>
+                <div style="display:flex; align-items:center; gap:20px;">
+                    <div style="font-size:1.5rem; color:#f1c40f; font-weight:bold;"><i class="ri-money-dollar-circle-fill"></i> <span id="shop-cash">0</span></div>
+                    <button class="ctrl-btn" onclick="toggleShop()"><i class="ri-close-line"></i></button>
+                </div>
             </div>
             <div class="shop-tabs" id="shop-tabs">
                 <!-- Tabs injected JS -->
@@ -248,6 +291,7 @@
             <button class="ctrl-btn" onclick="toggleShop()" title="Research Lab" style="border-color:#f1c40f; color:#f1c40f;"><i class="ri-flask-line"></i></button>
             <button class="ctrl-btn" onclick="sellAllTurrets()" title="Sell All Turrets"><i class="ri-currency-line"></i></button>
             <button class="ctrl-btn" onclick="centerCamera()" title="Recenter Camera"><i class="ri-focus-mode-line"></i></button>
+            <button class="ctrl-btn" onclick="systemPurge()" title="System Purge ($300)" style="border-color:#e17055; color:#e17055;"><i class="ri-alarm-warning-line"></i></button>
             <button class="ctrl-btn" onclick="resetGame()" title="Reset Game"><i class="ri-restart-line"></i></button>
             <button class="ctrl-btn" onclick="togglePause()" id="btn-pause" title="Pause/Resume"><i class="ri-pause-line"></i></button>
             <button class="ctrl-btn abort" onclick="abortGame()" title="Abort Wave"><i class="ri-stop-circle-line"></i> ABORT</button>
@@ -283,12 +327,9 @@
 
         const RESEARCH = [];
         const CATEGORIES = [
-            'Weaponry', 'Architecture', 'Economy', 'Core Systems', 
-            'Chronomancy', 'Matter Manip', 'Cyber-Warfare', 'Entropy', 
-            'Visuals', 'Omega'
+            'Weaponry', 'Defense', 'Economy', 'Tech', 'Omega'
         ];
         
-        // Generate 100 Upgrades
         // Weaponry
         ['Damage', 'Range', 'Fire Rate', 'Bullet Speed', 'Crit Chance'].forEach((stat, i) => {
             for(let j=1; j<=2; j++) {
@@ -299,42 +340,42 @@
                 });
             }
         });
-        // Architecture
-        RESEARCH.push({ id: 'wall_hp', cat: 'Architecture', name: 'Reinforced Walls', max: 10, cost: 300, desc: '+10% Wall HP.', type: 'stat' });
-        RESEARCH.push({ id: 'build_cost', cat: 'Architecture', name: 'Nanofabrication', max: 5, cost: 1000, desc: '-5% Building Cost.', type: 'stat' });
-        RESEARCH.push({ id: 'refund', cat: 'Architecture', name: 'Recycle Protocol', max: 5, cost: 800, desc: '+10% Sell Refund.', type: 'stat' });
+
+        // Defense (Merged Architecture & Core Systems)
+        RESEARCH.push({ id: 'shielding', cat: 'Defense', name: 'Core Shielding', max: 10, cost: 300, desc: '-5% Core Damage Taken.', type: 'stat' });
+        RESEARCH.push({ id: 'core_hp', cat: 'Defense', name: 'Core Integrity', max: 10, cost: 400, desc: '+20 Core HP.', type: 'stat' });
+        RESEARCH.push({ id: 'core_regen', cat: 'Defense', name: 'Auto-Repair', max: 5, cost: 1200, desc: 'Regen 1 HP/wave.', type: 'stat' });
+        RESEARCH.push({ id: 'thorns', cat: 'Defense', name: 'Firewall', max: 5, cost: 1000, desc: 'Attackers take 10 dmg.', type: 'stat' });
+
         // Economy
         RESEARCH.push({ id: 'interest', cat: 'Economy', name: 'Compound Interest', max: 5, cost: 2000, desc: '+1% Interest Rate.', type: 'stat' });
         RESEARCH.push({ id: 'bounty', cat: 'Economy', name: 'Data Mining', max: 10, cost: 500, desc: '+5% Cash from enemies.', type: 'stat' });
         RESEARCH.push({ id: 'start_cash', cat: 'Economy', name: 'Seed Funding', max: 5, cost: 400, desc: '+50 Starting Cash.', type: 'stat' });
-        // Core
-        RESEARCH.push({ id: 'core_hp', cat: 'Core Systems', name: 'Core Integrity', max: 10, cost: 400, desc: '+20 Core HP.', type: 'stat' });
-        RESEARCH.push({ id: 'core_regen', cat: 'Core Systems', name: 'Auto-Repair', max: 5, cost: 1200, desc: 'Regen 1 HP/wave.', type: 'stat' });
-        RESEARCH.push({ id: 'thorns', cat: 'Core Systems', name: 'Firewall', max: 5, cost: 1000, desc: 'Attackers take 10 dmg.', type: 'stat' });
-        // Chronomancy
-        RESEARCH.push({ id: 'flux', cat: 'Chronomancy', name: 'Temporal Flux', max: 5, cost: 1500, desc: 'Enemies have a 1-5% chance to glitch back.', type: 'mech' });
-        RESEARCH.push({ id: 'slow_aura', cat: 'Chronomancy', name: 'Time Dilation', max: 5, cost: 2000, desc: 'Global 5% enemy slow.', type: 'stat' });
-        // Matter
-        RESEARCH.push({ id: 'pierce', cat: 'Matter Manip', name: 'Phase Rounds', max: 3, cost: 3000, desc: '+1 Pierce for Snipers.', type: 'stat' });
-        RESEARCH.push({ id: 'splash', cat: 'Matter Manip', name: 'Unstable Mass', max: 3, cost: 2500, desc: 'Gunners deal small splash dmg.', type: 'mech' });
-        // Cyber
-        RESEARCH.push({ id: 'hack', cat: 'Cyber-Warfare', name: 'Bounty Hack', max: 5, cost: 1000, desc: 'Chance for double cash.', type: 'mech' });
-        RESEARCH.push({ id: 'stun', cat: 'Cyber-Warfare', name: 'Short Circuit', max: 5, cost: 1500, desc: 'Chance to stun enemies on hit.', type: 'mech' });
-        // Entropy
-        RESEARCH.push({ id: 'chaos_dmg', cat: 'Entropy', name: 'Wild Magic', max: 5, cost: 1200, desc: 'Turret damage fluctuates +/- 50%.', type: 'mech' });
-        RESEARCH.push({ id: 'crit_dmg', cat: 'Entropy', name: 'Fatal Error', max: 5, cost: 1500, desc: '+50% Crit Damage.', type: 'stat' });
-        // Visuals
-        RESEARCH.push({ id: 'chromatic', cat: 'Visuals', name: 'RGB Split', max: 5, cost: 500, desc: 'Adds chromatic aberration effect.', type: 'visual' });
-        RESEARCH.push({ id: 'shake', cat: 'Visuals', name: 'Screen Shake', max: 5, cost: 500, desc: 'Adds impact shake.', type: 'visual' });
-        RESEARCH.push({ id: 'bloom', cat: 'Visuals', name: 'Neon Overdrive', max: 5, cost: 500, desc: 'Increases glow intensity.', type: 'visual' });
+        RESEARCH.push({ id: 'build_cost', cat: 'Economy', name: 'Nanofabrication', max: 5, cost: 1000, desc: '-5% Building Cost.', type: 'stat' });
+        RESEARCH.push({ id: 'refund', cat: 'Economy', name: 'Recycle Protocol', max: 5, cost: 800, desc: '+10% Sell Refund.', type: 'stat' });
+
+        // Tech (Merged Chronomancy, Matter, Cyber, Entropy, Visuals)
+        RESEARCH.push({ id: 'flux', cat: 'Tech', name: 'Temporal Flux', max: 5, cost: 1500, desc: 'Enemies have a 1-5% chance to glitch back.', type: 'mech' });
+        RESEARCH.push({ id: 'slow_aura', cat: 'Tech', name: 'Time Dilation', max: 5, cost: 2000, desc: 'Global 5% enemy slow.', type: 'stat' });
+        RESEARCH.push({ id: 'pierce', cat: 'Tech', name: 'Phase Rounds', max: 3, cost: 3000, desc: '+1 Pierce for Snipers.', type: 'stat' });
+        RESEARCH.push({ id: 'splash', cat: 'Tech', name: 'Unstable Mass', max: 3, cost: 2500, desc: 'Gunners deal small splash dmg.', type: 'mech' });
+        RESEARCH.push({ id: 'hack', cat: 'Tech', name: 'Bounty Hack', max: 5, cost: 1000, desc: 'Chance for double cash.', type: 'mech' });
+        RESEARCH.push({ id: 'stun', cat: 'Tech', name: 'Short Circuit', max: 5, cost: 1500, desc: 'Chance to stun enemies on hit.', type: 'mech' });
+        RESEARCH.push({ id: 'chaos_dmg', cat: 'Tech', name: 'Wild Magic', max: 5, cost: 1200, desc: 'Turret damage fluctuates +/- 50%.', type: 'mech' });
+        RESEARCH.push({ id: 'crit_dmg', cat: 'Tech', name: 'Fatal Error', max: 5, cost: 1500, desc: '+50% Crit Damage.', type: 'stat' });
+        // Visuals merged into Tech as cheap upgrades
+        RESEARCH.push({ id: 'chromatic', cat: 'Tech', name: 'RGB Split', max: 5, cost: 200, desc: 'Adds chromatic aberration effect.', type: 'visual' });
+        RESEARCH.push({ id: 'shake', cat: 'Tech', name: 'Screen Shake', max: 5, cost: 200, desc: 'Adds impact shake.', type: 'visual' });
+        RESEARCH.push({ id: 'bloom', cat: 'Tech', name: 'Neon Overdrive', max: 5, cost: 200, desc: 'Increases glow intensity.', type: 'visual' });
+
         // Omega
         RESEARCH.push({ id: 'resonance', cat: 'Omega', name: 'Core Resonance', max: 5, cost: 5000, desc: 'Core pulses massive damage.', type: 'mech' });
         RESEARCH.push({ id: 'swarm', cat: 'Omega', name: 'Nano-Swarm', max: 5, cost: 4000, desc: 'Enemies leave damaging clouds.', type: 'mech' });
         RESEARCH.push({ id: 'overclock', cat: 'Omega', name: 'Sys-Overclock', max: 5, cost: 6000, desc: '+25% Global Fire Rate.', type: 'stat' });
 
-        // Fill remaining to reach ~100 with procedural stats
+        // Fill remaining
         let counter = 0;
-        while(RESEARCH.length < 80) {
+        while(RESEARCH.length < 60) {
             RESEARCH.push({ 
                 id: `gen_${counter}`, cat: 'Weaponry', name: `Output Tuner V${counter}`, max: 5, cost: 200 + counter*50, 
                 desc: `+1% Global Damage.`, type: 'stat' 
@@ -345,7 +386,7 @@
         // Game State
         let game = {
             hp: 100,
-            cash: 150,
+            cash: 150, // Will be overridden by load or reset
             wave: 1,
             active: false,
             over: false,
@@ -467,6 +508,12 @@
             let mult = 1;
             let add = 0;
 
+            // Level Scaling
+            if(t.level && t.level > 1) {
+                if(stat === 'dmg') mult += (t.level - 1) * 0.25;
+                if(stat === 'range') mult += (t.level - 1) * 0.05;
+            }
+
             if(stat === 'dmg') {
                 // Procedural & Manual Dmg Upgrades
                 for(let k in game.upgrades) {
@@ -481,6 +528,7 @@
             }
             if(stat === 'rate') {
                 let speedMult = 1 + (game.upgrades.overclock || 0) * 0.05;
+                if(t.level && t.level > 1) speedMult += (t.level - 1) * 0.1;
                 for(let k in game.upgrades) if(k.startsWith('wep_2_')) speedMult += game.upgrades[k] * 0.05;
                 return Math.max(1, base / speedMult);
             }
@@ -607,6 +655,24 @@
                         if(b.slow) e.slow = 60; 
                         if(game.upgrades.stun && Math.random() < 0.1 * game.upgrades.stun) e.stun = 30;
 
+                        createParticle(b.x, b.y, 'spark', b.color); // Hit effect
+
+                        // Splash Damage
+                        if(game.upgrades.splash > 0) {
+                            let splashRange = 60; // Px
+                            let splashDmg = b.dmg * 0.2 * game.upgrades.splash;
+                            createParticle(b.x, b.y, 'shockwave', b.color);
+                            for(let sE of game.enemies) {
+                                if(sE === e) continue;
+                                let sDx = sE.x - b.x;
+                                let sDy = sE.y - b.y;
+                                if(sDx*sDx + sDy*sDy < splashRange*splashRange) {
+                                    sE.hp -= splashDmg;
+                                    if(sE.hp <= 0) killEnemy(sE);
+                                }
+                            }
+                        }
+
                         if(e.hp <= 0) killEnemy(e);
                         
                         hit = true;
@@ -639,9 +705,8 @@
                 
                 if(gx === game.core.x && gy === game.core.y) {
                     let dmg = 5;
-                    if(game.upgrades.thorns > 0) {
-                        e.hp -= game.upgrades.thorns * 10;
-                        if(e.hp <= 0) killEnemy(e);
+                    if(game.upgrades.shielding > 0) {
+                        dmg *= (1 - game.upgrades.shielding * 0.05);
                     }
                     
                     game.hp -= dmg;
@@ -680,6 +745,28 @@
                 } else {
                     e.x = tx; e.y = ty;
                 }
+
+                // Glitch Mechanic
+                if(e.type === 'glitch') {
+                    e.glitchTimer = (e.glitchTimer || 0) + 1;
+                    if(e.glitchTimer > 120 && Math.random() < 0.05) { // Every ~2s, chance to teleport
+                        e.glitchTimer = 0;
+                        let jump = 40 + Math.random() * 40;
+                        e.x += (dx/dist) * jump; // Teleport forward
+                        e.y += (dy/dist) * jump;
+                        createParticle(e.x, e.y, 'spark', '#66fcf1');
+                    }
+                }
+            }
+
+            // Particles
+            for(let i = game.particles.length - 1; i >= 0; i--) {
+                let p = game.particles[i];
+                p.life--;
+                p.x += p.vx;
+                p.y += p.vy;
+                if(p.type === 'debris') p.vy += 0.2; // Gravity
+                if(p.life <= 0) game.particles.splice(i, 1);
             }
         }
 
@@ -689,6 +776,9 @@
                     x: e.x, y: e.y, life: 180, dmg: 10 * game.upgrades.swarm
                 });
             }
+
+            for(let i=0; i<5; i++) createParticle(e.x, e.y, 'debris', e.type === 'glitch' ? '#fff' : '#e74c3c');
+            createParticle(e.x, e.y, 'text', '+' + (e.bounty + (game.upgrades.bounty ? Math.floor(e.bounty * game.upgrades.bounty * 0.05) : 0)));
 
             let bonus = 0;
             if(game.upgrades.hack > 0) {
@@ -706,21 +796,71 @@
 
         function spawnEnemy() {
             let spawn = game.spawns[Math.floor(Math.random() * game.spawns.length)];
+            let isGlitch = game.wave > 3 && Math.random() < 0.15; // 15% chance for Glitch enemy after wave 3
+            
             game.enemies.push({
                 x: spawn.x * TILE_SIZE + TILE_SIZE/2,
                 y: spawn.y * TILE_SIZE + TILE_SIZE/2,
-                hp: 20 * Math.pow(1.15, game.wave), 
-                maxSpeed: 2 + Math.min(4, game.wave * 0.1),
+                hp: (isGlitch ? 10 : 20) * Math.pow(1.10, game.wave), // Reduced scaling from 1.15 to 1.10
+                maxSpeed: (isGlitch ? 4 : 2) + Math.min(4, game.wave * 0.1),
                 slow: 0,
                 stun: 0,
-                bounty: 5 + Math.floor(game.wave)
+                bounty: (isGlitch ? 15 : 5) + Math.floor(game.wave),
+                type: isGlitch ? 'glitch' : 'normal',
+                glitchTimer: 0
             });
+        }
+
+        function createParticle(x, y, type, color) {
+            let p = { x: x, y: y, type: type, life: 60, color: color, vx: (Math.random()-0.5)*5, vy: (Math.random()-0.5)*5 };
+            if(type === 'spark') { p.life = 20; p.size = 2 + Math.random()*2; }
+            if(type === 'debris') { p.life = 40; p.size = 3 + Math.random()*3; p.vx *= 2; p.vy *= 2; }
+            if(type === 'shockwave') { p.life = 30; p.size = 10; p.vx = 0; p.vy = 0; }
+            if(type === 'text') { p.life = 40; p.vy = -1; p.text = color; p.color = '#fff'; } // color arg used as text
+            game.particles.push(p);
+        }
+
+        function systemPurge() {
+            try {
+                if(game.cash >= 300) {
+                    game.cash -= 300;
+                    updateUI();
+                    
+                    // Push back all enemies
+                    for(let e of game.enemies) {
+                        let dx = e.x - (game.core.x * TILE_SIZE);
+                        let dy = e.y - (game.core.y * TILE_SIZE);
+                        let dist = Math.sqrt(dx*dx + dy*dy);
+                        if(dist > 0) {
+                            e.x += (dx/dist) * 200; // Push back 200px
+                            e.y += (dy/dist) * 200;
+                            e.stun = 60; // Stun for 1s
+                            e.hp -= 20; // Damage
+                            if(e.hp <= 0) killEnemy(e);
+                        }
+                    }
+                    
+                    // Visuals
+                    game.bullets.push({
+                        x: game.core.x * TILE_SIZE + TILE_SIZE/2, 
+                        y: game.core.y * TILE_SIZE + TILE_SIZE/2,
+                        vx: 0, vy: 0, life: 60, color: '#e17055', type: 'pulse', r: 0
+                    });
+                    
+                    showToast("SYSTEM PURGE INITIATED");
+                } else {
+                    showToast("Need $300 for Purge");
+                }
+            } catch(e) {
+                console.error(e);
+                showToast("Error: " + e.message);
+            }
         }
 
         function nextWave() {
             if(game.active) return;
             game.active = true;
-            game.enemiesToSpawn = 10 + Math.floor(Math.pow(game.wave, 1.2) * 5); // More enemies
+            game.enemiesToSpawn = 10 + Math.floor(Math.pow(game.wave, 1.1) * 5); // Reduced scaling from 1.2 to 1.1
             document.getElementById('btn-wave').style.display = 'none';
         }
 
@@ -768,11 +908,13 @@
         }
 
         function renderShop() {
+            document.getElementById('shop-cash').innerText = game.cash;
+
             // Render Tabs
             let tabs = document.getElementById('shop-tabs');
             tabs.innerHTML = '';
             CATEGORIES.forEach(cat => {
-                let btn = document.createElement('div');
+                let btn = document.createElement('button');
                 btn.className = `shop-tab ${game.shopCat === cat ? 'active' : ''}`;
                 btn.innerText = cat;
                 btn.onclick = () => { game.shopCat = cat; renderShop(); };
@@ -785,12 +927,17 @@
             
             RESEARCH.filter(r => r.cat === game.shopCat).forEach(r => {
                 let lvl = game.upgrades[r.id] || 0;
-                let cost = Math.floor(r.cost * Math.pow(1.5, lvl));
+                let cost = Math.floor(r.cost * Math.pow(1.3, lvl)); // Reduced scaling from 1.5 to 1.3
+                let pct = (lvl / r.max) * 100;
+                
                 let item = document.createElement('div');
                 item.className = 'shop-item';
                 item.innerHTML = `
-                    <div class="shop-lvl">Lvl ${lvl}/${r.max}</div>
-                    <h3>${r.name}</h3>
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <h3>${r.name}</h3>
+                        <div class="shop-lvl">Lvl ${lvl}/${r.max}</div>
+                    </div>
+                    <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
                     <p>${r.desc}</p>
                     <button class="shop-btn" onclick="buyUpgrade('${r.id}')" 
                         ${(lvl >= r.max || game.cash < cost) ? 'disabled' : ''}>
@@ -802,20 +949,30 @@
         }
 
         function buyUpgrade(id) {
-            let r = RESEARCH.find(x => x.id === id);
-            let lvl = game.upgrades[id] || 0;
-            let cost = Math.floor(r.cost * Math.pow(1.5, lvl));
-            
-            if(lvl < r.max && game.cash >= cost) {
-                game.cash -= cost;
-                game.upgrades[id] = lvl + 1;
+            try {
+                if(!id) throw new Error("Invalid upgrade ID");
+                let r = RESEARCH.find(x => x.id === id);
+                if(!r) throw new Error("Upgrade not found: " + id);
                 
-                // Stat application logic (can be handled dynamically in update/turrets)
-                // For direct changes (like interest), we might not need to do anything here if read dynamically.
+                let lvl = game.upgrades[id] || 0;
+                let cost = Math.floor(r.cost * Math.pow(1.3, lvl)); // Reduced scaling from 1.5 to 1.3
                 
-                renderShop();
-                updateUI();
-                saveGame();
+                if(lvl < r.max && game.cash >= cost) {
+                    game.cash -= cost;
+                    game.upgrades[id] = lvl + 1;
+                    renderShop();
+                    updateUI();
+                    saveGame();
+                    showToast("Researched: " + r.name);
+                    
+                    // Visual feedback
+                    createParticle(game.core.x*TILE_SIZE, game.core.y*TILE_SIZE, 'text', 'UPGRADE COMPLETE');
+                } else {
+                    showToast("Cannot afford or Maxed");
+                }
+            } catch(e) {
+                console.error(e);
+                showToast("Error: " + e.message);
             }
         }
 
@@ -849,6 +1006,65 @@
                 updateUI();
                 showToast("Sold All (+$" + refund + ")");
             }
+        }
+        function canBuild(gx, gy) {
+            if(gx < 0 || gx >= GRID_W || gy < 0 || gy >= GRID_H) return false;
+            if(getGrid(gx, gy) !== 0) return false;
+            if(game.selection === -1) return false;
+            let type = TYPES[game.selection];
+            
+            let cost = type.cost;
+            if(game.upgrades.build_cost) cost = Math.floor(cost * (1 - game.upgrades.build_cost * 0.05));
+
+            if(game.cash < cost) return false;
+            return true;
+        }
+
+        function upgradeTurret() {
+            if(!game.focus) return;
+            let t = game.focus;
+            if(t.type.type === 'wall') {
+                showToast("Cannot Upgrade Walls");
+                return;
+            }
+            let cost = Math.floor(t.type.cost * 0.5 * t.level);
+            
+            if(game.cash >= cost) {
+                game.cash -= cost;
+                t.level++;
+                updateUI();
+                closeCtxMenu();
+                showToast("Upgraded to Lvl " + t.level);
+                saveGame();
+            } else {
+                showToast("Need $" + cost);
+            }
+        }
+
+        function sellTurret() {
+            if(!game.focus) return;
+            let t = game.focus;
+            let refundPct = 0.5;
+            if(game.upgrades.refund) refundPct += game.upgrades.refund * 0.1;
+            
+            let refund = Math.floor(t.type.cost * refundPct);
+            
+            game.cash += refund;
+            setGrid(t.gx, t.gy, 0);
+            
+            let idx = game.turrets.indexOf(t);
+            if(idx > -1) game.turrets.splice(idx, 1);
+            
+            updateFlow();
+            updateUI();
+            closeCtxMenu();
+            showToast("Sold (+$" + refund + ")");
+            saveGame();
+        }
+
+        function closeCtxMenu() {
+            document.getElementById('ctx-menu').style.display = 'none';
+            game.focus = null;
         }
 
         function centerCamera() {
@@ -1080,8 +1296,17 @@
                 ctx.save();
                 ctx.translate(e.x, e.y);
                 ctx.rotate(game.frame * 0.1);
+                
+                if(e.type === 'glitch') {
+                    if(Math.random() < 0.2) ctx.translate(Math.random()*4-2, Math.random()*4-2); // Glitch shake
+                    ctx.fillStyle = '#fff';
+                    ctx.shadowColor = '#66fcf1';
+                    ctx.shadowBlur = 10;
+                }
+
                 ctx.fillRect(-8, -8, 16, 16);
                 ctx.restore();
+                ctx.shadowBlur = 0;
 
                 // HP Bar
                 let hpPct = e.hp / (20 * Math.pow(1.15, game.wave));
@@ -1118,6 +1343,35 @@
                 
                 ctx.fillStyle = 'rgba(102, 252, 241, 0.2)';
                 ctx.beginPath(); ctx.arc(c.x, c.y, 50, 0, Math.PI*2); ctx.fill();
+            }
+
+            // Particles
+            for(let p of game.particles) {
+                if(p.x < camera.x - vw/2 - 50 || p.x > camera.x + vw/2 + 50 || 
+                   p.y < camera.y - vh/2 - 50 || p.y > camera.y + vh/2 + 50) continue;
+
+                if(p.type === 'spark' || p.type === 'debris') {
+                    ctx.fillStyle = p.color;
+                    ctx.globalAlpha = p.life / 60;
+                    ctx.fillRect(p.x, p.y, p.size, p.size);
+                    ctx.globalAlpha = 1;
+                }
+                if(p.type === 'shockwave') {
+                    ctx.strokeStyle = p.color;
+                    ctx.lineWidth = 2;
+                    ctx.globalAlpha = p.life / 30;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, (30 - p.life) * 10, 0, Math.PI*2);
+                    ctx.stroke();
+                    ctx.globalAlpha = 1;
+                }
+                if(p.type === 'text') {
+                    ctx.fillStyle = p.color;
+                    ctx.font = 'bold 12px Rajdhani';
+                    ctx.globalAlpha = p.life / 40;
+                    ctx.fillText(p.text, p.x, p.y);
+                    ctx.globalAlpha = 1;
+                }
             }
 
             // Build Ghost
@@ -1174,7 +1428,7 @@
                 ctx.fillText("PAUSED", canvas.width/2, canvas.height/2);
             }
 
-            requestAnimationFrame(draw);
+            // requestAnimationFrame(draw); // Removed for loop()
         }
 
 
@@ -1213,7 +1467,10 @@
                         }
 
                         if(!block) {
-                            game.cash -= type.cost;
+                            let cost = type.cost;
+                            if(game.upgrades.build_cost) cost = Math.floor(cost * (1 - game.upgrades.build_cost * 0.05));
+
+                            game.cash -= cost;
                             game.turrets.push({
                                 x: gx*TILE_SIZE + TILE_SIZE/2,
                                 y: gy*TILE_SIZE + TILE_SIZE/2,
@@ -1346,7 +1603,10 @@
                 if(i === game.selection) btn.classList.add('selected');
                 else btn.classList.remove('selected');
                 
-                if(game.cash < TYPES[i].cost) btn.classList.add('disabled');
+                let cost = TYPES[i].cost;
+                if(game.upgrades.build_cost) cost = Math.floor(cost * (1 - game.upgrades.build_cost * 0.05));
+
+                if(game.cash < cost) btn.classList.add('disabled');
                 else btn.classList.remove('disabled');
             }
             
@@ -1377,6 +1637,8 @@
         resetGrid();
         if(!loadGame()) {
             // New game defaults
+            game.cash = 150;
+            if(game.upgrades && game.upgrades.start_cash) game.cash += game.upgrades.start_cash * 50;
         }
         resize();
         updateUI();
