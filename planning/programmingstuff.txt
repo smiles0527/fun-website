@@ -1,5 +1,0 @@
-4 diff logs
-Resource gain
-Upgrade gain
-Upgrade/tab unlock(upgrade/tab diff colors)
-lore
