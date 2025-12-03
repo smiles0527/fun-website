@@ -1,0 +1,31 @@
+Currency has a cap(base 100)
+
+Utilities:
+Coffee - 5 currency, 1.5x ideas for 10 seconds
+Hamburger - 5 currency, 1.5x braindead for 10 seconds
+
+Currency Upgrades:
+Frying Pan(3 currency) - 1.5x currency
+…(a bunch of random upgrades for progression)
+
+Find a job(30 seconds):
+50 ideas
+
+Get promoted:
+max currency
+1.2x max currency
+1.1x currency gain(pls deal with floating point decimals and shit)
+
+Fast Food Restaurant Worker(promotion #):
+Suspicion(0-100). Each time you work, there is a suspicion% chance to be fired.
+
+Work(automatically fills up every 5 seconds):
++1 currency
+
+Steal(takes 5 seconds to steal):
++1 suspicion
++ 5% max currency
+
+Autoworker(can be turned on/off):
+X brain dead
++1 currency/10 seconds, -0.1 ideas/second

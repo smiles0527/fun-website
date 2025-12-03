@@ -1,0 +1,89 @@
+RESEARCH tab unlocks at 1 IDEA
+
+IDEAS ARE HARDCAPPED AND SOFTCAPPED BASED ON IMMUNITY(go to immunity tab)
+THERE IS A MAX BRAINDEAD/CAP(necrotic shell increases it)
+
+Think - 1 ideas
+Prereq - none
+How can I increase my braindead? It must be something to do with my brain…
+
+Necrotic Tissue  - 2 ideas
+Prereq - Think
+UNLOCKS Necrotic Tissue in brain power
+What if I connected my braindead instead of leaving them separated?
+
+Neurotic Condensor - 3 ideas
+Prereq - Think
+UNLOCKS  in brain power
+Necrotic Tissue buff now applies to Neurotic Condenser(previously thought condenser)
+Could I use my necrotic tissue to think?
+
+Think some more - 6 ideas
+Prereq - Think
+There seems to be some sort of “immunity” stopping me from increasing my braindead quickly…
+UNLOCKS IMMUNITY STAT
+
+Immunity Research - 6 ideas
+Prereq - Think some more
+UNLOCKS VACCINE TAB
+Aha! I can just create a vaccine to decrease my immunity. That’s how vaccines work right?
+
+Necrotic Shell - 7 ideas
+Prereq - Immunity Research
+UNLOCKS in brain power
+
+Efficient Ideas- 7 ideas
+Prereq - Immunity Research
+A set multiplier to ideas(1.5x? 2x?)
+
+Neuronic Coating - 8 ideas
+Prereq - Necrotic Shell
+UNLOCKS in brain power
+
+
+Maybe a few upgrades here for balancing
+
+Vaccine V1 - 25 ideas
+Prereq - Immunity Research
+UNLOCKS VACCINE V1
+
+Maybe a few upgrades here for balancing
+
+MILESTONE 1:
+Prereq - Vaccine V1
+
+Maybe a few upgrades here for balancing
+
+Vaccine V2 - 50 ideas
+UNLOCKS VACCINE V2
+
+MILESTONE 2:
+
+
+Motor Networks:
+Prereq - none, can be seen as soon as milestone 2 is completed
+? ideas, ? braindead
+I can finally move…
+
+What now?:
+There seem to be other people nearby…
+
+Research…:
+I should get a j*b, maybe that’ll help with my vaccine research
+
+Get a j*b:
+Unlocks J*b tab
+[job_application.png]
+
+Study Biomatter:
+Prereq - Get a j*b
+5 currency
+
+Biomatter lab:
+Prereq - Study Biomatter
+Unlock braindead producer
+Unlock idea producer
+
+Vaccination 3:
+200-400 currency?
+UNLOCKS VACCINATION 3

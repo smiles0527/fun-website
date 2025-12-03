@@ -1,13 +1,13 @@
 Bd = braindead
 Id = ideas
 
-Enhanced Click:
+Enhanced Manual Thinking:
 - unlock at 10bd
 +1 to bd production
 Initial Cost: 10 bd
 Cost creep: 1.5
 
-Autoclicker:
+Autothinker:
 Unlocks at 50 bd
 +bd production/second
 Initial Cost: 100 bd
@@ -15,6 +15,7 @@ Cost creep: 2?
 
 Thought Condenser:
 Unlocks at 10 bd?
+Can be upgraded to neurotic condenser(see IDEAS)
 +0.1 to id/s
 Initial Cost: 50 bd
 Cost creep: 1.5?
@@ -24,4 +25,34 @@ Unlock at 1 ideas?
 +? to id/s
 Initial Cost: 100 bd
 Cost creep: 1.5?
+
+Neurotic Tissue:
+See IDEAS
+COST BD
+gives a additive percent boost to all bd)
+
+Necrotic Shell:
+See IDEAS
+COST BD
+Increases BD CAP
+
+Neuronic Covering:
+See IDEAS
+COST IDEAS
+Increases Brain Size(Check Immunity)
+
+
+
+
+
+
+CURRENCY ITEMS:
+Braindead Producer:
+- X currency
+? bd/s
+
+Idea Producer:
+X currency
+? idea/s
+
 

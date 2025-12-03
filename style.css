@@ -99,8 +99,8 @@ body::after {
     width: 320px;
     background: var(--panel-bg);
     border-right: 1px solid var(--panel-border);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     display: flex;
     flex-direction: column;
     padding: 25px;
@@ -129,6 +129,14 @@ body::after {
     color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 2px;
+}
+
+.resource-rate {
+    font-size: 0.8em;
+    color: #2ecc71;
+    margin-left: 5px;
+    text-transform: none;
+    letter-spacing: 0;
 }
 
 .resource-value {
@@ -464,25 +472,17 @@ input:checked + .slider:before {
 }
 
 #brain-button {
-    width: 250px;
-    height: 250px;
+    width: 260px;
+    height: 260px;
     border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, #ffd700, #f1c40f, #b7950b);
+    background: transparent; /* Remove gold ball */
     border: none;
     cursor: pointer;
-    box-shadow: 
-        0 0 60px rgba(255, 215, 0, 0.3),
-        inset 0 0 30px rgba(255, 255, 255, 0.4),
-        inset 0 0 10px rgba(0,0,0,0.2);
+    box-shadow: none; /* Remove box shadow */
     transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: var(--font-header);
-    font-size: 2em;
-    font-weight: 900;
-    color: #5c4000;
-    text-shadow: 0 1px 2px rgba(255,255,255,0.5);
     user-select: none;
     position: relative;
     z-index: 10;
@@ -490,34 +490,51 @@ input:checked + .slider:before {
     animation: brainPulse 4s ease-in-out infinite;
 }
 
+/* Inner texture/detail */
+#brain-button .brain-icon {
+    position: relative;
+    z-index: 2;
+    font-size: 180px; /* Huge brain */
+    filter: sepia(1) hue-rotate(10deg) saturate(3) drop-shadow(0 0 30px rgba(255, 215, 0, 0.6));
+    transition: transform 0.1s;
+}
+
+#brain-button:active .brain-icon {
+    transform: scale(0.95);
+}
+
 @keyframes brainPulse {
-    0% { transform: scale(1); box-shadow: 0 0 60px rgba(255, 215, 0, 0.3), inset 0 0 30px rgba(255, 255, 255, 0.4); }
-    50% { transform: scale(1.02); box-shadow: 0 0 80px rgba(255, 215, 0, 0.5), inset 0 0 40px rgba(255, 255, 255, 0.5); }
-    100% { transform: scale(1); box-shadow: 0 0 60px rgba(255, 215, 0, 0.3), inset 0 0 30px rgba(255, 255, 255, 0.4); }
+    0% { transform: scale(1); filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.2)); }
+    50% { transform: scale(1.05); filter: drop-shadow(0 0 50px rgba(255, 215, 0, 0.5)); }
+    100% { transform: scale(1); filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.2)); }
 }
 
 #brain-button::after {
     content: '';
     position: absolute;
-    top: -15px;
-    left: -15px;
-    right: -15px;
-    bottom: -15px;
+    top: -20px;
+    left: -20px;
+    right: -20px;
+    bottom: -20px;
     border-radius: 50%;
-    border: 1px solid rgba(255, 215, 0, 0.2);
-    animation: orbit 8s linear infinite;
+    border: 2px solid rgba(255, 215, 0, 0.15);
+    border-top-color: rgba(255, 215, 0, 0.6);
+    border-bottom-color: rgba(255, 215, 0, 0.6);
+    animation: orbit 10s linear infinite;
+    pointer-events: none;
 }
 
 #brain-button::before {
     content: '';
     position: absolute;
-    top: -25px;
-    left: -25px;
-    right: -25px;
-    bottom: -25px;
+    top: -35px;
+    left: -35px;
+    right: -35px;
+    bottom: -35px;
     border-radius: 50%;
-    border: 1px dashed rgba(155, 89, 182, 0.3);
-    animation: orbit 12s linear infinite reverse;
+    border: 1px dashed rgba(155, 89, 182, 0.4);
+    animation: orbit 15s linear infinite reverse;
+    pointer-events: none;
 }
 
 @keyframes orbit {
@@ -535,8 +552,8 @@ input:checked + .slider:before {
     width: 380px;
     background: var(--panel-bg);
     border-left: 1px solid var(--panel-border);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     display: flex;
     flex-direction: column;
     box-shadow: -5px 0 30px rgba(0,0,0,0.5);

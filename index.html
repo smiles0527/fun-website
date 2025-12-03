@@ -17,16 +17,24 @@
             <div class="resource-display">
                 <div class="section-title">Resources</div>
                 <div class="resource-item">
-                    <div class="resource-name">Braindead</div>
+                    <div class="resource-name">Braindead <span id="res-braindead-rate" class="resource-rate"></span></div>
                     <div class="resource-value" id="res-braindead">0</div>
                 </div>
                 <div class="resource-item">
-                    <div class="resource-name">Ideas</div>
+                    <div class="resource-name">Ideas <span id="res-ideas-rate" class="resource-rate"></span></div>
                     <div class="resource-value" id="res-ideas">0.0</div>
                 </div>
                 <div class="resource-item" id="immunity-display" style="display: none;">
                     <div class="resource-name">Immunity</div>
                     <div class="resource-value" id="res-immunity">100</div>
+                </div>
+                <div class="resource-item" id="currency-display" style="display: none;">
+                    <div class="resource-name">Currency</div>
+                    <div class="resource-value" id="res-currency">0</div>
+                </div>
+                <div class="resource-item" id="suspicion-display" style="display: none;">
+                    <div class="resource-name">Suspicion</div>
+                    <div class="resource-value" id="res-suspicion">0%</div>
                 </div>
             </div>
             
@@ -93,8 +101,27 @@
                          <!-- Research injected by JS -->
                     </div>
                 </div>
+            <!-- Job Panel (Hidden initially) -->
+            <div class="panel job-panel" id="job-panel" style="display: none;">
+                <h2>JOB CENTER</h2>
+                <div class="job-info">
+                    <div class="current-job" id="current-job-name">Unemployed</div>
+                    <div class="job-stats">
+                        <div>Salary: <span id="job-salary">0</span></div>
+                        <div>Max Currency: <span id="job-max-currency">0</span></div>
+                    </div>
+                </div>
+                <div class="job-actions">
+                    <button id="btn-work" class="action-btn">Work (+<span id="work-amount">0</span>)</button>
+                    <button id="btn-steal" class="action-btn danger-btn">Steal</button>
+                </div>
+                <div class="job-upgrades" id="job-upgrades-list">
+                    <!-- Job upgrades/promotions -->
+                </div>
             </div>
         </div>
+    </div>
+
 
         <!-- Log Panel -->
         <div class="log-panel" id="log-section">
