@@ -45,7 +45,7 @@ function getInitialUpgrades() {
             name: "Idea Amplifier",
             description: "Boosts Idea generation",
             cost: 250,
-            costScale: 1.5,
+            costScale: 1.6,
             currency: "braindead",
             count: 0,
             effect: function(game) { game.production.ideas += 0.2; },
@@ -61,7 +61,7 @@ function getInitialUpgrades() {
             costScale: 1.5,
             currency: "braindead",
             count: 0,
-            effect: function(game) { game.productionMultipliers.braindead += 0.1; },
+            effect: function(game) { game.productionMultipliers.braindead += 0.2; },
             unlockCondition: function(game) { return game.research.necroticTissue && game.research.necroticTissue.purchased; },
             visible: false
         },
