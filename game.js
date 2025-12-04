@@ -11,12 +11,12 @@ class Game {
         };
 
         this.caps = {
-            braindead: 100, // Base cap
+            braindead: 500, // Base cap
             ideas: 5 // Base cap
         };
 
         this.brainSize = 1; // Multiplier for caps
-        this.scalingMulti = 0.5; // Multiplier for idea gain past softcap
+        this.scalingMulti = 1.7; // Multiplier for idea gain past softcap
 
         this.production = {
             braindead: 0,
@@ -309,11 +309,11 @@ class Game {
         const immunityFactor = Math.max(1, this.resources.immunity);
         
         // Ideas Caps
-        const ideasSoftCap = (50000 * this.brainSize) / immunityFactor;
-        const ideasHardCap = (100000 * this.brainSize) / immunityFactor;
+        const ideasSoftCap = (500 * this.brainSize) / immunityFactor;
+        const ideasHardCap = (1000 * this.brainSize) / immunityFactor;
 
         // Braindead Cap
-        const braindeadCap = (this.caps.braindead * this.brainSize * 1000) / immunityFactor;
+        const braindeadCap = (this.caps.braindead);
 
         return {
             ideas: {
@@ -453,9 +453,11 @@ class Game {
             // Ideas Production with Soft Cap Logic
             let ideasProduction = this.production.ideas * this.productionMultipliers.ideas * dt;
             if (this.resources.ideas > caps.ideas.soft) {
-                ideasProduction *= this.scalingMulti; // Penalty if above soft cap
+                this.resources.ideas += ideasProduction / Math.pow(this.scalingMulti,(this.resources.ideas-caps.ideas.soft)); // Penalty if above soft cap
             }
-            this.resources.ideas += ideasProduction;
+            else {
+                this.resources.ideas += ideasProduction;
+            }
             
             this.checkCaps();
             
