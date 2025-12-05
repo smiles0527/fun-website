@@ -56,7 +56,7 @@ function getInitialUpgrades() {
         necroticTissue: {
             id: 'necroticTissue',
             name: "Necrotic Tissue",
-            description: "Connects braindead. +10% Braindead production.",
+            description: "Connects braindead. +20% Braindead production.",
             cost: 100,
             costScale: 1.5,
             currency: "braindead",
@@ -285,8 +285,8 @@ function getInitialVaccines() {
             id: 'vaccineV1',
             name: "Vaccine V1",
             description: "Reduces immunity.",
-            cost: 0,
-            currency: "ideas",
+            cost: 1500,
+            currency: "braindead",
             purchased: false,
             prereq: null,
             effect: function(game) {
