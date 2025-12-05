@@ -35,8 +35,8 @@ function getInitialUpgrades() {
             costScale: 1.4,
             currency: "braindead",
             count: 0,
-            effect: function(game) { game.production.ideas += 0.05; },
-            baseProduction: { ideas: 0.05 },
+            effect: function(game) { game.production.ideas += 0.1; },
+            baseProduction: { ideas: 0.1 },
             unlockCondition: function(game) { return game.resources.braindead >= 50; },
             visible: false
         },
@@ -163,6 +163,20 @@ function getInitialResearch() {
             unlockCondition: function(game) { return game.research.thinkMore.purchased; },
             visible: false
         },
+        vaccineV1Research: {
+            id: 'vaccineV1Research',
+            name: "Vaccine V1 Blueprint",
+            description: "The first step.",
+            cost: 25,
+            currency: "ideas",
+            purchased: false,
+            prereq: 'immunityResearch',
+            effect: function(game) {
+                game.log("[placeholder]", "lore");
+            },
+            unlockCondition: function(game) { return game.research.immunityResearch.purchased; },
+            visible: false
+        },
         necroticTissue: {
             id: 'necroticTissue',
             name: "Necrotic Tissue",
@@ -271,15 +285,17 @@ function getInitialVaccines() {
             id: 'vaccineV1',
             name: "Vaccine V1",
             description: "Reduces immunity.",
-            cost: 52345234234523452345,
-            currency: "ideas",
+            cost: 1500,
+            currency: "braindead",
             purchased: false,
             prereq: null,
             effect: function(game) {
                 game.resources.immunity = Math.max(1, game.resources.immunity - 10);
                 game.log("Immunity reduced! Braindead gain increased.", "general");
             },
-            unlockCondition: function(game) { return game.research.immunityResearch.purchased && game.resources.ideas >= 10; },
+            // reset all progress except for immunity + make this vaccine unable to be bought
+            // apply 1.5x buff(multiplicative of other buffs) to ideas and braindead
+            unlockCondition: function(game) { return game.research.vaccineV1Research.purchased; },
             visible: false
         },
         vaccineV2: {
@@ -301,8 +317,8 @@ function getInitialJobs() {
     return {
         intern: {
             id: 'intern',
-            name: "Unpaid Intern",
-            salary: 0,
+            name: "Intern",
+            salary: 0.1,
             maxCurrency: 10,
             suspicionRate: 0,
             req: 0
