@@ -110,7 +110,10 @@ class TerminalUI {
         // Calculate rates
         const immunityMult = 100 / Math.max(1, res.immunity);
         const bdRate = game.production.braindead * game.productionMultipliers.braindead * immunityMult;
-        const ideasRate = game.production.ideas * game.productionMultipliers.ideas;
+        let ideasRate = game.production.ideas * game.productionMultipliers.ideas;
+        if (res.ideas > caps.ideas.soft) {
+            ideasRate = ideasRate / Math.pow(game.scalingMulti, (res.ideas - caps.ideas.soft));
+        }
 
         if (res.braindead > 0) {
             html += `<div class="res-item">Braindead: <span class="res-val">${Math.floor(res.braindead)}</span>`;

@@ -160,7 +160,7 @@ function getInitialResearch() {
             effect: function(game) {
                 game.log("Aha! I can just create a vaccine to decrease my immunity. That's how vaccines work right?", "lore");
             },
-            unlockCondition: function(game) { return game.research.immunityResearch.purchased && game.resources.ideas >= 5; },
+            unlockCondition: function(game) { return game.research.thinkMore.purchased; },
             visible: false
         },
         necroticTissue: {

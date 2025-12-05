@@ -59,6 +59,7 @@ class Game {
         this.ui = new TerminalUI(this);
 
         this.isReady = false;
+        this.isResetting = false;
         this.init();
     }
 
@@ -91,7 +92,7 @@ class Game {
     }
 
     save() {
-        if (!this.isReady) return; // Don't save if not ready
+        if (!this.isReady || this.isResetting) return; // Don't save if not ready or resetting
         
         const saveData = {
             resources: this.resources,
@@ -137,7 +138,7 @@ class Game {
 
     importSave(saveString, isInitialLoad = false) {
         try {
-            let jsonString = saveString;
+            let jsonString = saveString.trim();
             try {
                 const decoded = atob(saveString);
                 // Simple check to see if it looks like JSON
@@ -259,7 +260,7 @@ class Game {
             } else {
                 this.log("Save imported successfully!", "general");
                 this.save();
-                this.ui.checkProgression(this);
+                location.reload(); // Reload to ensure clean state
             }
 
             this.updateUI();
@@ -288,6 +289,7 @@ class Game {
         // Autosave on unload is handled in init
     }
     reset() {
+        this.isResetting = true;
         localStorage.removeItem('kylesBrainquestSave');
         location.reload();
     }
