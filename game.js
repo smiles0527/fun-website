@@ -18,7 +18,7 @@ class Game {
         };
 
         this.brainSize = 1; // Multiplier for caps
-        this.scalingMulti = 1.7; // Multiplier for idea gain past softcap
+        this.scalingMulti = 1.75; // Multiplier for idea gain past softcap
 
         this.production = {
             braindead: 0,
