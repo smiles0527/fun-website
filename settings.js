@@ -16,8 +16,6 @@ class SettingsManager {
         
         // Options
         html += `<div style="margin-top: 15px; margin-bottom: 5px; color: #fff;">-- CONFIG --</div>`;
-        // const offlineState = this.game.options.offlineProgress ? 'ON' : 'OFF';
-        // html += `<button class="cmd-btn" onclick="game.options.offlineProgress = !game.options.offlineProgress; game.settings.save();">offline progress: ${offlineState}</button>`;
         
         html += `<div style="margin-top: 10px; color: var(--dim-text);">Screen Brightness: <span id="brightness-val">${this.game.options.brightness}%</span></div>`;
         html += `<div style="display: flex; gap: 10px; margin-bottom: 10px;">`;
@@ -131,9 +129,11 @@ class SettingsManager {
             // Validate critical values
             if (isNaN(this.game.resources.braindead)) this.game.resources.braindead = 0;
             if (isNaN(this.game.resources.ideas)) this.game.resources.ideas = 0;
-            if (isNaN(this.game.resources.immunity)) this.game.resources.immunity = 100;
+            if (isNaN(this.game.resources.immunity) || this.game.resources.immunity <= 0) this.game.resources.immunity = 100;
             if (isNaN(this.game.resources.currency)) this.game.resources.currency = 0;
             if (isNaN(this.game.resources.suspicion)) this.game.resources.suspicion = 0;
+            
+            if (isNaN(this.game.clickValue.braindead)) this.game.clickValue.braindead = 1;
 
             if (saveData.upgrades) {
                 saveData.upgrades.forEach(savedUpgrade => {
@@ -178,7 +178,7 @@ class SettingsManager {
 
             if (isInitialLoad) {
                 // Check if we should reveal everything based on progress
-                if (this.game.resources.braindead > 0) {
+                if (this.game.resources.braindead > 0 || this.game.tabUnlocks.upgrades) {
                     this.game.ui.checkProgression(this.game);
                 } else {
                      // If 0 braindead (new save?), just show brain
@@ -190,15 +190,15 @@ class SettingsManager {
                 location.reload(); // Reload to ensure clean state
             }
 
+            // Recalculate rates based on loaded upgrades/research
+            this.game.resourceManager.recalculateRates(this.game);
+
             this.game.updateUI();
             
             if (this.game.research.thinkMore.purchased) {
                 document.getElementById('immunity-display').style.display = 'flex';
             }
             
-            const offlineToggle = document.getElementById('offline-toggle');
-            if (offlineToggle) offlineToggle.checked = this.game.options.offlineProgress;
-
             // Apply visual settings
             if (this.game.options.brightness) {
                 this.applyBrightness(this.game.options.brightness);

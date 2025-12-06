@@ -31,13 +31,101 @@ body {
     display: flex;
     gap: 20px;
     padding-bottom: 10px;
-    border-bottom: 1px solid var(--dim-text);
+    /* border-bottom: 1px solid var(--dim-text); REMOVED */
     margin-bottom: 20px;
     font-size: 0.9em;
+    position: relative; /* For pseudo-border */
+}
+
+.resource-strip::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    right: 50%;
+    height: 1px;
+    background: var(--dim-text);
+    transition: left 2.5s ease, right 2.5s ease;
+}
+
+/* ... (other styles) ... */
+
+.controls-column::before { /* Left Border */
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    bottom: 50%;
+    width: 1px;
+    background: var(--dim-text);
+    transition: top 2.5s ease, bottom 2.5s ease;
+}
+
+.controls-column::after { /* Right Border */
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    bottom: 50%;
+    width: 1px;
+    background: var(--dim-text);
+    transition: top 2.5s ease, bottom 2.5s ease;
+}
+
+/* ... */
+
+.log-column::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    bottom: 50%;
+    width: 1px;
+    background: var(--dim-text);
+    transition: top 2.5s ease, bottom 2.5s ease;
+}
+
+/* ... */
+
+.nav-strip::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    right: 50%;
+    height: 1px;
+    background: var(--dim-text);
+    transition: left 2.5s ease, right 2.5s ease;
+}
+
+.nav-link {
+    color: var(--dim-text);
+    cursor: pointer;
+    text-decoration: none;
+    padding: 5px 10px;
+    user-select: none;
+    transition: color 0.2s, background-color 0.2s, opacity 2s ease; /* Added opacity transition */
+    border-radius: 4px;
+    opacity: 0; /* Start hidden */
+}
+
+.nav-strip.visible-content .nav-link {
+    opacity: 1;
+}
+
+.resource-strip.visible-border::after {
+    left: 0;
+    right: 0;
 }
 
 .res-item {
     color: var(--dim-text);
+    opacity: 0;
+    transition: opacity 1s ease;
+}
+
+.resource-strip.visible-content .res-item {
+    opacity: 1;
 }
 
 .res-val {
@@ -125,9 +213,38 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 0;
-    border-left: 1px solid var(--dim-text);
-    border-right: 1px solid var(--dim-text);
+    /* border-left: 1px solid var(--dim-text); REMOVED */
+    /* border-right: 1px solid var(--dim-text); REMOVED */
     padding: 0 20px; /* Spacing inside column */
+    position: relative;
+}
+
+.controls-column::before { /* Left Border */
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    bottom: 50%;
+    width: 1px;
+    background: var(--dim-text);
+    transition: top 1s ease, bottom 1s ease;
+}
+
+.controls-column::after { /* Right Border */
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    bottom: 50%;
+    width: 1px;
+    background: var(--dim-text);
+    transition: top 1s ease, bottom 1s ease;
+}
+
+.controls-column.visible-border::before,
+.controls-column.visible-border::after {
+    top: 0;
+    bottom: 0;
 }
 
 .controls-area {
@@ -135,6 +252,12 @@ body {
     flex-direction: column;
     gap: 8px;
     overflow-y: auto; /* Allow scrolling if too many buttons */
+    opacity: 0;
+    transition: opacity 2s ease;
+}
+
+.controls-area.visible-content {
+    opacity: 1;
 }
 
 /* Log Column (Right) */
@@ -144,7 +267,30 @@ body {
     flex-direction: column;
     min-height: 0;
     padding-left: 20px;
-    border-left: 1px solid var(--dim-text); /* Add separator */
+    /* border-left: 1px solid var(--dim-text); REMOVED */
+    position: relative;
+    opacity: 0; /* Hidden initially */
+    transition: opacity 2.5s ease;
+}
+
+.log-column.visible-content {
+    opacity: 1;
+}
+
+.log-column::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    bottom: 50%;
+    width: 1px;
+    background: var(--dim-text);
+    transition: top 1s ease, bottom 1s ease;
+}
+
+.log-column.visible-border::before {
+    top: 0;
+    bottom: 0;
 }
 
 .purchase-log-overlay {
@@ -154,13 +300,57 @@ body {
     right: 20px;
     width: 250px;
     background: rgba(17, 17, 17, 0.9); /* Dark semi-transparent bg */
-    border: 1px solid var(--dim-text);
+    /* border: 1px solid var(--dim-text); REMOVED */
     border-radius: 5px;
     padding: 10px;
     display: flex;
     flex-direction: column;
     max-height: 80vh;
     z-index: 1000;
+    opacity: 0; /* Hidden initially */
+    pointer-events: none; /* No interaction when hidden */
+    transition: opacity 2.5s ease; /* Slower fade-in */
+}
+
+.purchase-log-overlay::before { /* Top and Bottom borders */
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    right: 50%;
+    border-top: 1px solid var(--dim-text);
+    border-bottom: 1px solid var(--dim-text);
+    transition: left 2.5s ease, right 2.5s ease;
+    pointer-events: none;
+}
+
+.purchase-log-overlay::after { /* Left and Right borders */
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    bottom: 50%;
+    border-left: 1px solid var(--dim-text);
+    border-right: 1px solid var(--dim-text);
+    transition: top 2.5s ease, bottom 2.5s ease;
+    pointer-events: none;
+}
+
+.purchase-log-overlay.visible-border::before {
+    left: 0;
+    right: 0;
+}
+
+.purchase-log-overlay.visible-border::after {
+    top: 0;
+    bottom: 0;
+}
+
+.purchase-log-overlay.visible {
+    opacity: 1;
+    pointer-events: auto;
 }
 
 .log-header {
@@ -238,9 +428,26 @@ body {
 .nav-strip {
     margin-top: 20px;
     padding-top: 10px;
-    border-top: 1px solid var(--dim-text);
+    /* border-top: 1px solid var(--dim-text); REMOVED */
     display: flex;
     gap: 20px;
+    position: relative;
+}
+
+.nav-strip::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    right: 50%;
+    height: 1px;
+    background: var(--dim-text);
+    transition: left 1s ease, right 1s ease;
+}
+
+.nav-strip.visible-border::before {
+    left: 0;
+    right: 0;
 }
 
 .nav-link {

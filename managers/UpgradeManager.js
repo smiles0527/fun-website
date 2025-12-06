@@ -7,13 +7,25 @@ class UpgradeManager {
         this.game.upgrades = getInitialUpgrades();
     }
 
+    getCost(upgrade) {
+        return Math.floor(upgrade.baseCost * Math.pow(upgrade.costScale, upgrade.count));
+    }
+
     buyUpgrade(key) {
         const upgrade = this.game.upgrades[key];
-        if (this.game.resources[upgrade.currency] >= upgrade.cost) {
-            this.game.resources[upgrade.currency] -= upgrade.cost;
+        const cost = this.getCost(upgrade);
+        if (this.game.resources[upgrade.currency] >= cost) {
+            this.game.resources[upgrade.currency] -= cost;
             upgrade.count++;
-            upgrade.cost = Math.floor(upgrade.cost * upgrade.costScale);
-            upgrade.effect(this.game); // Pass game instance
+            // upgrade.cost is no longer stored, calculated dynamically
+            
+            if (upgrade.effect) {
+                upgrade.effect(this.game, upgrade.count);
+            }
+            
+            // Recalculate all rates/caps
+            this.game.resourceManager.recalculateRates(this.game);
+
             this.game.log(`Purchased ${upgrade.name}`, "upgrade");
             this.game.updateUI();
         }

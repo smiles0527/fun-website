@@ -9,6 +9,7 @@ class TerminalUI {
             asciiArt: document.getElementById('ascii-art'),
             logDisplay: document.getElementById('log-display'),
             purchaseLogDisplay: document.getElementById('purchase-log-display'),
+            logColumn: document.getElementById('log-column'), // Added
             controlsArea: document.getElementById('controls-area'),
             navStrip: document.getElementById('nav-strip')
         };
@@ -37,7 +38,7 @@ class TerminalUI {
             this.game.clickBrain();
             
             // Show feedback
-            const immunityMult = 100 / Math.max(1, this.game.resources.immunity);
+            const immunityMult = 100 / Math.max(1, this.game.resources.immunity || 100);
             const gain = this.game.clickValue.braindead * immunityMult;
             const caps = this.game.calculateCaps();
             
@@ -89,21 +90,35 @@ class TerminalUI {
 
     checkProgression(game) {
         // Phase 1: Brain appears
-        // Handled by intro or load, but safety check:
-        if (game.resources.braindead > 0 && !this.elements.asciiArt.textContent) {
+        if ((game.resources.braindead > 0 || game.tabUnlocks.upgrades) && !this.elements.asciiArt.textContent) {
              this.revealBrain();
-             this.log("A shape forms in the void.");
+             if (game.resources.braindead > 0) { // Only log if it's a fresh discovery
+                 this.log("A shape forms in the void.");
+             }
         }
 
 
         // Phase 2: Resources appear
-        if (game.resources.braindead > 0) {
+        if (game.resources.braindead > 0 || game.tabUnlocks.upgrades) {
             this.elements.resourceStrip.style.display = 'flex';
+            
+            // Trigger animations after a slight delay to ensure display:flex is applied
+            setTimeout(() => {
+                this.elements.resourceStrip.classList.add('visible-border');
+                this.elements.resourceStrip.classList.add('visible-content');
+                this.elements.controlsArea.parentElement.classList.add('visible-border');
+                this.elements.controlsArea.classList.add('visible-content'); // Add fade-in for controls
+                // document.getElementById('log-column').classList.add('visible-border'); // Moved to Phase 3
+            }, 100);
         }
 
         // Phase 3: Nav appears
-        if (game.resources.braindead >= 10) {
+        if (game.resources.braindead >= 10 || game.tabUnlocks.upgrades) {
             this.elements.navStrip.style.display = 'flex';
+            setTimeout(() => {
+                this.elements.navStrip.classList.add('visible-border');
+                this.elements.navStrip.classList.add('visible-content'); // Trigger fade-in
+            }, 100);
         }
     }
 
@@ -115,14 +130,15 @@ class TerminalUI {
         let html = '';
         
         // Calculate rates
-        const immunityMult = 100 / Math.max(1, res.immunity);
+        const immunityMult = 100 / Math.max(1, res.immunity || 100);
         const bdRate = game.production.braindead * game.productionMultipliers.braindead * immunityMult;
         let ideasRate = game.production.ideas * game.productionMultipliers.ideas;
         if (res.ideas > caps.ideas.soft) {
             ideasRate = ideasRate / Math.pow(game.scalingMulti, (res.ideas - caps.ideas.soft));
         }
 
-        if (res.braindead > 0) {
+        // Braindead (Always show if strip is visible)
+        if (true) {
             const bdTooltip = `Base: ${Math.floor(game.caps.braindead)} x Brain Size: ${game.brainSize}`;
             html += `<div class="res-item" onmouseenter="game.ui.showTooltip('${bdTooltip}')" onmouseleave="game.ui.hideTooltip()">Braindead: <span class="res-val">${Math.floor(res.braindead)}</span>`;
             if (res.braindead >= caps.braindead) {
@@ -133,7 +149,8 @@ class TerminalUI {
             html += `</div>`;
         }
         
-        if (res.ideas > 0) {
+        // Ideas (Show if we have any, or if we have production, or if research is unlocked)
+        if (res.ideas > 0 || game.production.ideas > 0 || game.tabUnlocks.research) {
             html += `<div class="res-item">Ideas: <span class="res-val">${res.ideas.toFixed(2)}</span>`;
             if (res.ideas >= caps.ideas.hard) {
                 html += `<span class="res-capped">(MAX)</span>`;
@@ -143,9 +160,13 @@ class TerminalUI {
             html += `</div>`;
         }
         
-        //decimal place manipulation
+        // Decimal place manipulation
         if (res.immunity < 100) html += `<div class="res-item">Immunity: <span class="res-val">${Math.floor(res.immunity)}</span></div>`;
-        if (res.currency > 0) html += `<div class="res-item">Currency: <span class="res-val">${res.currency.toFixed(2)}</span></div>`;
+        
+        // Currency (Show if we have any, or if jobs are unlocked)
+        if (res.currency > 0 || game.tabUnlocks.jobs) {
+            html += `<div class="res-item">Currency: <span class="res-val">${res.currency.toFixed(2)}</span></div>`;
+        }
 
         if (this.lastResourceHTML !== html) {
             this.elements.resourceStrip.innerHTML = html;
@@ -172,33 +193,74 @@ class TerminalUI {
         const views = ['main'];
         if (game.tabUnlocks.upgrades) views.push('upgrades');
         if (game.tabUnlocks.research) views.push('research');
-        if (game.tabUnlocks.vaccines) {
-            views.push('vaccines');
-        }
+        if (game.tabUnlocks.vaccines) views.push('vaccines');
+        if (game.tabUnlocks.jobs) views.push('jobs');
         
-        if (game.tabUnlocks.jobs) {
-            views.push('jobs');
-        } let html = '';
-        views.forEach(view => {
-            const active = this.currentView === view ? 'active' : '';
-            let notify = '';
+        // Always add settings
+        views.push('settings');
 
-            // Check for notifications
-            if (this.hasNotifications(view, game)) {
-                notify = 'nav-notify';
+        // Helper to get existing link
+        const getLink = (view) => this.elements.navStrip.querySelector(`[data-view="${view}"]`);
+
+        // 1. Add new views
+        views.forEach(view => {
+            let link = getLink(view);
+            if (!link) {
+                link = document.createElement('a');
+                link.href = "#";
+                link.className = 'nav-link';
+                link.dataset.view = view;
+                link.textContent = `[ ${view.toUpperCase()} ]`;
+                link.onclick = (e) => {
+                    e.preventDefault();
+                    this.game.ui.switchView(view);
+                };
+                
+                // Add fade-in animation for new items
+                link.style.animation = 'fadeIn 2s ease forwards';
+                
+                // Insert in correct order? 
+                // Simple append works if views are always added in order or at end.
+                // But 'settings' is always last. 
+                // If we unlock 'upgrades' (index 1), and 'settings' (index 2) exists...
+                // We need to insertBefore.
+                
+                // Find the next view in the list that already exists
+                const myIndex = views.indexOf(view);
+                let nextSibling = null;
+                for (let i = myIndex + 1; i < views.length; i++) {
+                    const nextView = views[i];
+                    const nextLink = getLink(nextView);
+                    if (nextLink) {
+                        nextSibling = nextLink;
+                        break;
+                    }
+                }
+                
+                if (nextSibling) {
+                    this.elements.navStrip.insertBefore(link, nextSibling);
+                } else {
+                    this.elements.navStrip.appendChild(link);
+                }
             }
 
-            html += `<a href="#" class="nav-link ${active} ${notify}" onclick="game.ui.switchView('${view}'); return false;">[ ${view.toUpperCase()} ]</a>`;
+            // 2. Update State (Active / Notify)
+            const isActive = this.currentView === view;
+            const hasNotify = this.hasNotifications(view, game);
+            
+            if (isActive && !link.classList.contains('active')) link.classList.add('active');
+            if (!isActive && link.classList.contains('active')) link.classList.remove('active');
+            
+            if (hasNotify && !link.classList.contains('nav-notify')) link.classList.add('nav-notify');
+            if (!hasNotify && link.classList.contains('nav-notify')) link.classList.remove('nav-notify');
         });
-        
-        // Settings link always there if nav is visible
-        const active = this.currentView === 'settings' ? 'active' : '';
-        html += `<a href="#" class="nav-link ${active}" onclick="game.ui.switchView('settings'); return false;">[ SETTINGS ]</a>`;
 
-        if (this.lastNavHTML !== html) {
-            this.elements.navStrip.innerHTML = html;
-            this.lastNavHTML = html;
-        }
+        // 3. Remove old views (if re-locking is possible, though unlikely)
+        Array.from(this.elements.navStrip.children).forEach(child => {
+            if (child.tagName === 'A' && !views.includes(child.dataset.view)) {
+                this.elements.navStrip.removeChild(child);
+            }
+        });
     }
 
     switchView(view) {
@@ -354,6 +416,22 @@ class TerminalUI {
         
         if (type === 'upgrade' || type === 'unlock') {
             targetDisplay = this.elements.purchaseLogDisplay;
+            // Reveal purchase log if hidden
+            const overlay = document.getElementById('purchase-log-column');
+            if (overlay && !overlay.classList.contains('visible')) {
+                overlay.classList.add('visible');
+                setTimeout(() => {
+                    overlay.classList.add('visible-border');
+                }, 100);
+
+                // Also reveal System Log (Right Column)
+                const sysLog = document.getElementById('log-column');
+                if (sysLog) {
+                    sysLog.style.opacity = '1'; // Force reveal
+                    sysLog.classList.add('visible-content');
+                    sysLog.classList.add('visible-border');
+                }
+            }
         }
 
         targetDisplay.appendChild(entry);
@@ -378,6 +456,7 @@ class TerminalUI {
         // Reset to initial state
         this.elements.resourceStrip.style.display = 'none';
         this.elements.navStrip.style.display = 'none';
+        this.elements.logColumn.style.opacity = '0'; // Ensure hidden
         this.elements.asciiArt.textContent = "";
     }
     

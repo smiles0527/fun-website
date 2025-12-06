@@ -22,6 +22,32 @@ class VaccineManager {
     }
 
     triggerVaccine(tier) {
+        // 1. Reset Global Stats to Defaults
+        this.game.production = { braindead: 0, ideas: 0 };
+        this.game.productionMultipliers = { braindead: 1, ideas: 1 };
+        this.game.clickValue = { braindead: 1 };
+        this.game.caps = { braindead: 500, ideas: 5 };
+        this.game.brainSize = 1;
+        this.game.scalingMulti = 1.75;
+
+        // 2. Reset Upgrades (Count AND Cost)
+        const freshUpgrades = getInitialUpgrades();
+        Object.keys(this.game.upgrades).forEach(key => {
+            const u = this.game.upgrades[key];
+            const fresh = freshUpgrades[key];
+            if (fresh) {
+                u.count = 0;
+                u.cost = fresh.cost; // Reset cost
+                u.visible = false;
+            }
+        });
+
+        // 3. Reset Research
+        Object.values(this.game.research).forEach(r => {
+            r.purchased = false;
+            r.visible = false;
+        });
+
         if (tier === 1) {
             // Reset resources
             this.game.resources.braindead = 0;
@@ -29,22 +55,6 @@ class VaccineManager {
             this.game.resources.immunity = 80; // Reduced immunity
             this.game.resources.currency = 0;
             this.game.resources.suspicion = 0;
-            
-            // Reset Upgrades
-            Object.values(this.game.upgrades).forEach(u => {
-                u.count = 0;
-                // We rely on reload to reset costs properly as they are not stored in save except current cost
-                // But since we reload, we just need to save the state.
-                // Actually, the save logic saves current state.
-                // If we reload, we load from save.
-                // So we need to ensure the save reflects the reset.
-            });
-            
-            // Reset Research
-            Object.values(this.game.research).forEach(r => {
-                r.purchased = false;
-                r.visible = false;
-            });
 
             // Apply global multiplier
             this.game.productionMultipliers.braindead *= 1.5;
@@ -61,10 +71,6 @@ class VaccineManager {
             this.game.resources.immunity = 60; 
             this.game.resources.currency = 0;
             this.game.resources.suspicion = 0;
-            
-            // Reset Upgrades & Research
-             Object.values(this.game.upgrades).forEach(u => { u.count = 0; });
-             Object.values(this.game.research).forEach(r => { r.purchased = false; r.visible = false; });
              
             // Apply global multiplier
             this.game.productionMultipliers.braindead *= 2.5; 

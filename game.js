@@ -37,7 +37,6 @@ class Game {
         this.logs = [];
         this.currentLogFilter = 'all';
         this.options = {
-            offlineProgress: true,
             brightness: 100
         };
 
@@ -56,15 +55,7 @@ class Game {
         // Use SettingsManager for loading
         this.settings.load();
         
-        // Autosave every 30 seconds (handled in tick or here?)
-        // Original game.js had setInterval here AND check in tick.
-        // settings.js has setupAutosave() but it wasn't called in original game.js.
-        // Let's stick to game.js tick based autosave or setInterval.
-        // Original game.js had:
-        // setInterval(() => this.save(), 30000);
-        // AND in tick: if (now - this.lastSave > 30000) ...
-        // I'll use the tick one for consistency with loop, or setInterval.
-        // Let's use setInterval as in original init (lines 95).
+        // Autosave every 30 seconds (handled in tick)?? (goofy)
         setInterval(() => this.save(), 30000);
         
         // Save on close/refresh
@@ -128,8 +119,16 @@ class Game {
 
     tick() {
         const now = Date.now();
-        const dt = (now - this.lastTick) / 1000;
+        let dt = (now - this.lastTick) / 1000;
         this.lastTick = now;
+
+        // STRICT NO OFFLINE PROGRESS
+        if (document.hidden) {
+            return; // Pause completely if tab is hidden
+        }
+
+        // Clamp dt to prevent catch-up if loop was throttled
+        if (dt > 0.1) dt = 0.1; 
 
         this.resourceManager.tick(dt);
         this.jobManager.tick(dt);
