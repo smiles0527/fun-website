@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:asdehielo.itch.io)",
+      "Bash(python -m http.server:*)"
+    ]
+  }
+}
