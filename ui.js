@@ -163,6 +163,10 @@ class TerminalUI {
             } else if (ideasRate > 0) {
                 html += `<span class="res-rate">(+${ideasRate.toFixed(2)}/s)</span>`;
             }
+            // Show softcap warning if above soft cap but below hard cap
+            if (res.ideas > caps.ideas.soft && res.ideas < caps.ideas.hard) {
+                html += `<span class="res-softcapped">[SOFTCAPPED at ${caps.ideas.soft.toFixed(0)}]</span>`;
+            }
             html += `</div>`;
         }
         
@@ -347,15 +351,16 @@ class TerminalUI {
             const cost = game.upgradeManager.getCost(u);
             const canAfford = game.resources[u.currency] >= cost;
             const disabled = canAfford ? '' : 'disabled';
-            
-            let text = `buy ${u.name.toLowerCase()} (${Math.floor(cost)} ${u.currency === 'braindead' ? 'bd' : (u.currency === 'ideas' ? 'id' : 'curr')})`; 
+            const progressionClass = u.progressionRequired ? 'progression-required' : '';
+
+            let text = `buy ${u.name.toLowerCase()} (${Math.floor(cost)} ${u.currency === 'braindead' ? 'bd' : (u.currency === 'ideas' ? 'id' : 'curr')})`;
             if (u.count > 0) text += ` [owned: ${u.count}]`;
-            
+
             // Escape description for attribute
             const desc = u.description.replace(/'/g, "&apos;");
 
             html += `
-            <button class="cmd-btn" ${disabled} 
+            <button class="cmd-btn ${progressionClass}" ${disabled}
                 onclick="game.buyUpgrade('${u.id}')"
                 onmouseenter="game.ui.showTooltip('${desc}')"
                 onmouseleave="game.ui.hideTooltip()"

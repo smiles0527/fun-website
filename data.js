@@ -36,6 +36,7 @@ function getInitialUpgrades() {
             currency: "braindead",
             count: 0,
             productionBonus: { ideas: 0.1 },
+            progressionRequired: true,
             unlockCondition: function(game) { return game.resources.braindead >= 50; },
             visible: false
         },
@@ -85,8 +86,9 @@ function getInitialUpgrades() {
             costScale: 1.4,
             currency: "braindead",
             count: 0,
-            // Brain size is a special property. 
+            // Brain size is a special property.
             specialBonus: { brainSize: 1 },
+            progressionRequired: true,
             unlockCondition: function(game) { return game.research.neuronicCoating && game.research.neuronicCoating.purchased; },
             visible: false
         },

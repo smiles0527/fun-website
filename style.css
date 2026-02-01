@@ -146,6 +146,12 @@ body {
     margin-left: 5px;
 }
 
+.res-softcapped {
+    color: #ff4444;
+    font-size: 0.8em;
+    margin-left: 5px;
+}
+
 /* Main Area */
 .main-area {
     display: flex;
@@ -434,6 +440,22 @@ body {
 
 .cmd-btn::before { content: '[ '; color: var(--dim-text); }
 .cmd-btn::after { content: ' ]'; color: var(--dim-text); }
+
+.cmd-btn.progression-required {
+    color: #ff9933;
+    border-color: #ff9933;
+}
+
+.cmd-btn.progression-required:hover {
+    color: #ffbb66;
+    border-color: #ffbb66;
+}
+
+.cmd-btn.progression-required:disabled {
+    color: #ff9933;
+    border-color: #ff9933;
+    opacity: 0.5;
+}
 
 /* Navigation Strip */
 .nav-strip {
