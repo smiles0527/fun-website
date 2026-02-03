@@ -297,6 +297,21 @@ function getInitialResearch() {
       effect: function (game) { game.log("Lab operational.", "lore"); },
       unlockCondition: function (game) { return game.research.studyBiomatter.purchased; },
       visible: false
+    },
+    entrepreneurship: {
+      id: 'entrepreneurship',
+      name: "Entrepreneurship",
+      description: "Unlock the Business tab. Start your briandead empire.",
+      cost: 500,
+      currency: "currency",
+      purchased: false,
+      prereq: "biomatterLab",
+      effect: function (game) {
+        game.log("Time to build something of your own...", "lore");
+        game.tabUnlocks.business = true;
+      },
+      unlockCondition: function (game) { return game.research.biomatterLab.purchased && game.jobStats.successfulWorks >= 100; },
+      visible: false
     }
   };
 }
@@ -440,5 +455,64 @@ function getInitialJobs() {
       reqCurrency: 10000,
       reqVaccine: 'vaccineV3'
     },
+  };
+}
+
+function getInitialCities() {
+  return {
+    smallTown: {
+      id: 'smallTown',
+      name: "Small Town",
+      population: 10000,
+      demandMultiplier: 1.0,
+      competition: 0.1,
+      softCap: 50,
+      hardCap: 100,
+      unlocked: true
+    },
+    suburb: {
+      id: 'suburb',
+      name: "Suburb",
+      population: 50000,
+      demandMultiplier: 1.2,
+      competition: 0.25,
+      softCap: 200,
+      hardCap: 500,
+      unlocked: false,
+      reqRevenue: 10000
+    },
+    city: {
+      id: 'city',
+      name: "City",
+      population: 200000,
+      demandMultiplier: 1.5,
+      competition: 0.4,
+      softCap: 500,
+      hardCap: 2000,
+      unlocked: false,
+      reqRevenue: 100000
+    },
+    metropolis: {
+      id: 'metropolis',
+      name: "Metropolis",
+      population: 1000000,
+      demandMultiplier: 2.0,
+      competition: 0.6,
+      softCap: 2000,
+      hardCap: 10000,
+      unlocked: false,
+      reqRevenue: 1000000
+    },
+    megacity: {
+      id: 'megacity',
+      name: "Megacity",
+      population: 10000000,
+      demandMultiplier: 3.0,
+      competition: 0.8,
+      softCap: 10000,
+      hardCap: 100000,
+      unlocked: false,
+      reqRevenue: 10000000
+    }
   };
 }

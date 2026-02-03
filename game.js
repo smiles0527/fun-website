@@ -8,6 +8,7 @@ class Game {
     this.researchManager = new ResearchManager(this);
     this.vaccineManager = new VaccineManager(this);
     this.jobManager = new JobManager(this);
+    this.businessManager = new BusinessManager(this);
     this.settings = new SettingsManager(this);
 
     // Initialize Managers (State)
@@ -16,6 +17,7 @@ class Game {
     this.researchManager.init();
     this.vaccineManager.init();
     this.jobManager.init();
+    this.businessManager.init();
 
     // Initialize Settings (Save Version etc)
     // SettingsManager constructor sets saveVersion
@@ -24,7 +26,8 @@ class Game {
       upgrades: false,
       research: false,
       vaccines: false,
-      jobs: false
+      jobs: false,
+      business: false
     };
 
     // CPS Limiter

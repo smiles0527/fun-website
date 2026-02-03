@@ -205,6 +205,7 @@ class TerminalUI {
     if (game.tabUnlocks.research) views.push('research');
     if (game.tabUnlocks.vaccines) views.push('vaccines');
     if (game.tabUnlocks.jobs) views.push('jobs');
+    if (game.tabUnlocks.business) views.push('business');
 
     // Always add settings
     views.push('settings');
@@ -302,6 +303,8 @@ class TerminalUI {
       html = this.getVaccinesHTML(game);
     } else if (this.currentView === 'jobs') {
       html = this.getJobsHTML(game);
+    } else if (this.currentView === 'business') {
+      html = this.getBusinessHTML(game);
     } else if (this.currentView === 'settings') {
       html = game.settings.getHTML();
     }
@@ -437,6 +440,12 @@ class TerminalUI {
     let html = '';
     // Job Info
     const job = game.jobs[game.currentJob];
+    const stats = game.jobStats;
+
+    html += `<div style="margin-button: 15px; color: #888;">
+      <div>Current Job: <span style="color: var(--text-color);">${job.name}</span> (Salary: $${job.salary})</div>
+      <div>Successful Works: ${stats.successfulWorks} | Total Earned: $${stats.totalEarned.toFixed(2)}</div>
+    </div>`;
     html += `<div style="margin-bottom: 10px; color: #888;">Current Job: ${job.name} (Salary: ${job.salary})</div>`;
 
     // Actions
@@ -446,9 +455,116 @@ class TerminalUI {
 
     html += `<button class="cmd-btn" ${disabled} onclick="game.work()">${btnText}</button>`;
 
+    const autoText = stats.autoWorkEnabled ? 'disable auto-work' : 'enable auto-work (50% pay)';
+    const autoClass = stats.autoWorkEnabled ? 'style="color: #88ff88;"' : '';
+    html += `<button class="cmd-btn" $autoClass} onclick ="game.jobManager.toggleAutowork()">${autoText}</button>`;
+
+    html += `<div style="margin-top: 20px; border-top: 1px solid var(--dimm-text); padding-top: 15px;">`;
+    html += `<div style="color: #888; marign-bottom: 10px;">Available Jobs:</div>`;
+
+    const availbleJobs = game.jobManager.getAvailableJobs();
+    availbleJobs.foreaceh(j => {
+      const isCurrentJob = j.id === game.currentJob;
+      const jobClass = isCurrentJob ? 'style="color: #88ff88:"' : '';
+      const prefix = isCurrentJob ? '▶ ' : '';
+
+      let reqText = '';
+      if (j.reqWorks > 0 || j.reqCurrency > 0) {
+        reqText = ` [req: ${j.reqWorks} works, $${j.reqCurrency}]`;
+      }
+
+      html += `<button class="cmd-btn" ${jobClass} onclick ="game.promote('${j.id}')">${prefix}${j.name.toLowerCase()} - $${j.salary}/shift${reqText}</button>`;
+    });
+
+    const allJobs = Object.values(game.jobs);
+    const nextLocked = allJobs.find(j => !game.jobManager.canUnlockJob(j.id) && j.tier <= 4);
+    if (nextLocked) {
+      const worksNeeded = Math.max(0, nextLocked.reqWorks - stats.successfulWorks);
+      const currencyNeeded = Math.max(0, nextLocked.reqCurrency - game.resources.currency);
+      html += `<div style = "color: var(--dim-text); margin-top: 10px; font-size: 0.9em;">
+          Next: ${nextLocked.name} (need ${worksNeeded} more works, $${currencyNeeded.toFixed(0)} more)
+      </div>`;
+    }
+
+    html += `</div>`;
     return html;
   }
 
+  getBusinessHTML(game) {
+    let html = '';
+    const city = game.cities[game.currentCity];
+    const stats = game.businessStats;
+
+    // City Info
+    html += `<div style="margin-bottom: 15px; color: #888;">
+            <div>Location: <span style="color: var(--text-color);">${city.name}</span> (Pop: ${city.population.toLocaleString()})</div>
+            <div>Demand Multiplier: ${city.demandMultiplier}x | Total Revenue: $${stats.totalRevenue.toFixed(2)}</div>
+        </div>`;
+
+    // Owned Businesses
+    if (game.ownedBusinesses.length > 0) {
+      html += `<div style="border-bottom: 1px solid var(--dim-text); padding-bottom: 10px; margin-bottom: 10px;">`;
+      html += `<div style="color: #888; margin-bottom: 10px;">Your Businesses:</div>`;
+
+      game.ownedBusinesses.forEach((biz, idx) => {
+        const types = game.businessManager.getBusinessTypes();
+        const type = types[biz.type];
+        const totalEmp = game.businessManager.getTotalEmployees(biz);
+
+        html += `<div style="margin-bottom: 15px; padding: 10px; border: 1px solid var(--dim-text);">`;
+        html += `<div style="color: var(--text-color); font-weight: bold;">${biz.name}</div>`;
+        html += `<div style="color: #888; font-size: 0.9em;">Employees: ${totalEmp}/${city.hardCap} | Skill: ${biz.averageSkill.toFixed(2)}x</div>`;
+
+        // Progress bars
+        html += `<div style="display: flex; gap: 10px; margin: 5px 0;">`;
+        html += `<div style="flex: 1;"><span style="color: #88ff88;">Prod:</span> ${Math.floor(biz.productionBar)}%</div>`;
+        html += `<div style="flex: 1;"><span style="color: #8888ff;">Demand:</span> ${Math.floor(biz.demandBar)}%</div>`;
+        html += `<div style="flex: 1;"><span style="color: #ffff88;">Stock:</span> ${Math.floor(biz.inventory)}</div>`;
+        html += `</div>`;
+
+        // Hire buttons
+        const empCost = game.businessManager.getEmployeeCost(biz);
+        const canHire = game.businessManager.canHire(biz, 'operations');
+        html += `<div style="margin-top: 8px; font-size: 0.85em;">`;
+        html += `<div style="color: #888;">Hire ($${empCost} each):</div>`;
+
+        const empTypes = ['operations', 'logistics', 'marketing', 'sales', 'hr', 'management'];
+        empTypes.forEach(et => {
+          const count = biz.employees[et];
+          const disabled = canHire ? '' : 'disabled';
+          html += `<button class="cmd-btn" style="font-size: 0.8em; padding: 2px 6px;" ${disabled} onclick="game.businessManager.hire(game.ownedBusinesses[${idx}], '${et}')">${et.substr(0, 3)} (${count})</button> `;
+        });
+        html += `</div>`;
+
+        html += `<div style="color: #888; margin-top: 5px;">Revenue: $${biz.totalRevenue.toFixed(2)}</div>`;
+        html += `</div>`;
+      });
+
+      html += `</div>`;
+    }
+
+    // Available Businesses to Purchase
+    html += `<div style="color: #888; margin-bottom: 10px;">Start a Business:</div>`;
+
+    const availableTypes = game.businessManager.getAvailableBusinessTypes();
+    if (availableTypes.length === 0) {
+      html += `<div style="color: var(--dim-text);">No businesses available yet. Complete job research first.</div>`;
+    } else {
+      availableTypes.forEach(type => {
+        const cost = game.businessManager.getBusinessCost(type.id);
+        const canAfford = game.resources.currency >= cost;
+        const disabled = canAfford ? '' : 'disabled';
+
+        html += `<button class="cmd-btn" ${disabled} 
+                    onclick="game.businessManager.createBusiness('${type.id}')"
+                    onmouseenter="game.ui.showTooltip('${type.description}')"
+                    onmouseleave="game.ui.hideTooltip()"
+                >buy ${type.name.toLowerCase()} ($${cost.toLocaleString()})</button>`;
+      });
+    }
+
+    return html;
+  }
   // Settings methods moved to settings.js
 
   log(message, type = 'general') {
