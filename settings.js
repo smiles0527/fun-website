@@ -127,7 +127,7 @@ class SettingsManager {
       if (saveData.productionMultipliers) this.game.productionMultipliers = { ...this.game.productionMultipliers, ...saveData.productionMultipliers };
       if (saveData.clickValue) this.game.clickValue = { ...this.game.clickValue, ...saveData.clickValue };
       if (saveData.currentJob) this.game.currentJob = saveData.currentJob;
-      if (saveData.jobStats) this.gamejobStats = { ...this.game.jobStats, ...saveData.jobStats };
+      if (saveData.jobStats) this.game.jobStats = { ...this.game.jobStats, ...saveData.jobStats };
       if (saveData.ownedBusiness) this.game.ownedBusiness = saveData.ownedBusiness;
       if (saveData.currentCity) this.game.currentCity = saveData.currentCity;
       if (saveData.businessStats) this.game.businessStats = { ...this.game.businessStats, ...saveData.businessStats };
@@ -202,10 +202,6 @@ class SettingsManager {
       this.game.resourceManager.recalculateRates(this.game);
 
       this.game.updateUI();
-
-      if (this.game.research.thinkMore.purchased) {
-        document.getElementById('immunity-display').style.display = 'flex';
-      }
 
       // Apply visual settings
       if (this.game.options.brightness) {

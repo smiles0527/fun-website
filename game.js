@@ -128,9 +128,12 @@ class Game {
     let dt = (now - this.lastTick) / 1000;
     this.lastTick = now;
 
-    // STRICT NO OFFLINE PROGRESS
+    // Always schedule next frame first to prevent loop death
+    requestAnimationFrame(() => this.tick());
+
+    // STRICT NO OFFLINE PROGRESS - skip processing but keep loop alive
     if (document.hidden) {
-      return; // Pause completely if tab is hidden
+      return;
     }
 
     // Clamp dt to prevent catch-up if loop was throttled
@@ -144,8 +147,6 @@ class Game {
     this.vaccineManager.checkUnlocks();
 
     this.updateUI();
-
-    requestAnimationFrame(() => this.tick());
   }
 
   updateUI() {

@@ -85,7 +85,7 @@ class VaccineManager {
   checkUnlocks() {
 
     if (!this.game.tabUnlocks.vaccines && this.game.research.vaccineV1Research &&
-      this.game.research.vaccineV1Resaerch.purchased) {
+      this.game.research.vaccineV1Research.purchased) {
 
       this.game.tabUnlocks.vaccines = true;
       this.game.updateUI();

@@ -1,7 +1,5 @@
 // data.js - Contains static game data and definitions
 
-const { Suspense } = require("react");
-
 function getInitialUpgrades() {
   return {
     enhancedClick: {
@@ -102,7 +100,6 @@ function getInitialUpgrades() {
       costScale: 1.2,
       currency: "currency",
       count: 0,
-      count: 0,
       productionBonus: { braindead: 5 },
       type: 'biomatter',
       unlockCondition: function (game) { return game.research.biomatterLab && game.research.biomatterLab.purchased; },
@@ -115,7 +112,6 @@ function getInitialUpgrades() {
       baseCost: 200,
       costScale: 1.3,
       currency: "currency",
-      count: 0,
       count: 0,
       productionBonus: { ideas: 0.5 },
       type: 'biomatter',
@@ -164,7 +160,7 @@ function getInitialResearch() {
       prereq: 'think',
       effect: function (game) {
         game.log("There seems to be some sort of 'immunity' stopping me from increasing my braindead quickly...", "lore");
-        document.getElementById('immunity-display').style.display = 'flex';
+        // Immunity is already shown in the resource strip when < 100
       },
       unlockCondition: function (game) { return game.research.think.purchased && game.resources.ideas >= 2; },
       visible: false
