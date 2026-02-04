@@ -695,4 +695,31 @@ class TerminalUI {
     this.game.currentUpgradeTab = tab;
     this.update(this.game);
   }
+
+  showLorePopup(message) {
+    // Create a simple popup/modal for lore messages
+    const popup = document.createElement('div');
+    popup.style.position = 'fixed';
+    popup.style.top = '50%';
+    popup.style.left = '50%';
+    popup.style.transform = 'translate(-50%, -50%)';
+    popup.style.backgroundColor = '#1a1a1a';
+    popup.style.border = '2px solid #4277f5';
+    popup.style.padding = '20px';
+    popup.style.maxWidth = '500px';
+    popup.style.zIndex = '1000';
+    popup.style.color = '#4277f5';
+    popup.style.fontFamily = 'monospace';
+    popup.innerHTML = `
+      <div style="margin-bottom: 10px; font-weight: bold;">[ LORE ENTRY ]</div>
+      <div style="margin-bottom: 15px;">${message}</div>
+      <button id="lore-close" style="padding: 5px 15px; background: #4277f5; color: #000; border: none; cursor: pointer; font-family: monospace;">Close</button>
+    `;
+
+    document.body.appendChild(popup);
+
+    document.getElementById('lore-close').onclick = () => {
+      popup.remove();
+    };
+  }
 }
