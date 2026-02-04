@@ -51,7 +51,7 @@ class TerminalUI {
       } else {
         const displayGain = gain % 1 === 0 ? gain : gain.toFixed(1);
         fb.textContent = `+${displayGain} Bd`;
-        fb.style.color = ''; // Reset color
+        fb.style.color = ''; // Reset fb
       }
 
       fb.classList.remove('visible');
@@ -457,15 +457,15 @@ class TerminalUI {
 
     const autoText = stats.autoWorkEnabled ? 'disable auto-work' : 'enable auto-work (50% pay)';
     const autoClass = stats.autoWorkEnabled ? 'style="color: #88ff88;"' : '';
-    html += `<button class="cmd-btn" $autoClass} onclick ="game.jobManager.toggleAutowork()">${autoText}</button>`;
+    html += `<button class="cmd-btn" ${autoClass} onclick="game.jobManager.toggleAutowork()">${autoText}</button>`;
 
-    html += `<div style="margin-top: 20px; border-top: 1px solid var(--dimm-text); padding-top: 15px;">`;
-    html += `<div style="color: #888; marign-bottom: 10px;">Available Jobs:</div>`;
+    html += `<div style="margin-top: 20px; border-top: 1px solid var(--dim-text); padding-top: 15px;">`;
+    html += `<div style="color: #888; margin-bottom: 10px;">Available Jobs:</div>`;
 
-    const availbleJobs = game.jobManager.getAvailableJobs();
-    availbleJobs.foreaceh(j => {
+    const availableJobs = game.jobManager.getAvailableJobs();
+    availableJobs.forEach(j => {
       const isCurrentJob = j.id === game.currentJob;
-      const jobClass = isCurrentJob ? 'style="color: #88ff88:"' : '';
+      const jobClass = isCurrentJob ? 'style="color: #88ff88;"' : '';
       const prefix = isCurrentJob ? '▶ ' : '';
 
       let reqText = '';
@@ -473,7 +473,7 @@ class TerminalUI {
         reqText = ` [req: ${j.reqWorks} works, $${j.reqCurrency}]`;
       }
 
-      html += `<button class="cmd-btn" ${jobClass} onclick ="game.promote('${j.id}')">${prefix}${j.name.toLowerCase()} - $${j.salary}/shift${reqText}</button>`;
+      html += `<button class="cmd-btn" ${jobClass} onclick="game.promote('${j.id}')">${prefix}${j.name.toLowerCase()} - $${j.salary}/shift${reqText}</button>`;
     });
 
     const allJobs = Object.values(game.jobs);
