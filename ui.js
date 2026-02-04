@@ -697,7 +697,7 @@ class TerminalUI {
   }
 
   showLorePopup(message) {
-    // Create a simple popup/modal for lore messages
+
     const popup = document.createElement('div');
     popup.style.position = 'fixed';
     popup.style.top = '50%';
